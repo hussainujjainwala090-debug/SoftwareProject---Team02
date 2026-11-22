@@ -1,5 +1,5 @@
 # AgriScan end-to-end smoke test over HTTP (uvicorn, memory mode, live Open-Meteo weather)
-# Date: 2026-11-22T19:09Z  Branch: feature/backend
+# Date: 2026-11-22T19:22Z  Branch: feature/backend  Commit: 1495cfa
 # Command: python scripts/smoke_test.py http://127.0.0.1:8765
 
 [PASS] Health: HTTP 200
@@ -11,7 +11,7 @@
 [PASS] Farmer is refused from admin pages: HTTP 403
 [PASS] Create farm profile (FR-02): HTTP 201
 [PASS] Live weather for the farm (FR-14): HTTP 200
-        available=True temp=24.3 humidity=57.0 rain=0.0 notice=None
+        available=True temp=24.2 humidity=58.0 rain=0.0 notice=None
 [PASS] Upload leaf scan (FR-03/04): HTTP 201
         label=Uncertain status=uncertain confidence=0.0
 [PASS] Same scan_id uploaded again (offline retry): HTTP 201
