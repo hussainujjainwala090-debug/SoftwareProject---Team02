@@ -1,0 +1,11 @@
+{
+  "farm_id": "1bc4cf51c2b94236a682be1107d6f61b",
+  "owner_id": "6773a58315ba46e2986cf5b651475ec0",
+  "name": "Al Ain palm farm",
+  "latitude": 24.2075,
+  "longitude": 55.7447,
+  "crops": [
+    "date_palm",
+    "tomato"
+  ]
+}

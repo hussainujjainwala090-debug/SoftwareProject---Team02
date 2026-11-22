@@ -1,0 +1,23 @@
+{
+  "diagnosis_id": "d691881054b3459287dd52c57b859d49",
+  "scan_id": "d691881054b3459287dd52c57b859d49",
+  "farm_id": "1bc4cf51c2b94236a682be1107d6f61b",
+  "user_id": "6773a58315ba46e2986cf5b651475ec0",
+  "crop_type": "date_palm",
+  "captured_at": "2026-11-22T21:33:15+00:00",
+  "label": "Uncertain",
+  "status": "uncertain",
+  "disease_id": null,
+  "confidence": 0.942,
+  "affected_area_pct": null,
+  "severity_level": null,
+  "spread_risk": null,
+  "spread_risk_explanation": null,
+  "image_url": "http://localhost:8000/files/scans/5a98df920acf4cbab9946bd55f04e3af.jpg",
+  "overlay_url": null,
+  "reviewed_by": null,
+  "advice": "The result is uncertain. Retake the photo in good light with the leaf inside the frame, or ask an agronomist to review it.",
+  "weather": null,
+  "treatments": [],
+  "feedback": null
+}
