@@ -1,0 +1,47 @@
+{
+  "farm_id": "1bc4cf51c2b94236a682be1107d6f61b",
+  "total_scans": 2,
+  "diseases_found": 1,
+  "uncertain": 1,
+  "scans_per_week": [
+    {
+      "week": "2026-W44",
+      "scans": 0,
+      "avg_affected_area_pct": null
+    },
+    {
+      "week": "2026-W45",
+      "scans": 0,
+      "avg_affected_area_pct": null
+    },
+    {
+      "week": "2026-W46",
+      "scans": 0,
+      "avg_affected_area_pct": null
+    },
+    {
+      "week": "2026-W47",
+      "scans": 2,
+      "avg_affected_area_pct": 0.4
+    }
+  ],
+  "common_diseases": [
+    {
+      "disease": "Tomato early blight",
+      "count": 1
+    }
+  ],
+  "climate_alert": {
+    "spread_risk": "low",
+    "explanation": "Low risk for leaf diseases of date palm: humid (78%).",
+    "weather": {
+      "available": true,
+      "notice": null,
+      "weather_id": "b3acd90667024e1db6e4894693257bb6",
+      "temperature": 34.0,
+      "humidity": 78.0,
+      "rainfall": 0.0,
+      "fetched_at": "2026-11-22T21:33:15+00:00"
+    }
+  }
+}
