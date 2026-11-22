@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agriscan-ml"
+version = "0.1.0"
+description = "AgriScan ML components: disease classifier, severity segmentation, spread risk"
+requires-python = ">=3.10"
+dependencies = ["numpy", "pillow"]
+
+[project.optional-dependencies]
+# Only needed to train or run the CNN classifier.
+classifier = ["tensorflow"]
+
+[tool.setuptools]
+packages = ["agriscan_ml"]
