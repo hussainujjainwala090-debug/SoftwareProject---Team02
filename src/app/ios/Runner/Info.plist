@@ -26,6 +26,19 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>AgriScan uses the camera to photograph crop leaves for diagnosis.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>AgriScan does not record audio; the camera plugin requires this entry.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>AgriScan lets you pick a leaf photo from your gallery for diagnosis.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>AgriScan uses your location to set the farm position for local weather.</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+	</dict>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
