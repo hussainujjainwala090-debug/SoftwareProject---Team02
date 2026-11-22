@@ -124,9 +124,14 @@ class _ResultScreenState extends State<ResultScreen> {
         title: d.label,
         trailing: d.reviewedBy != null ? const Chip(label: Text('Reviewed')) : null,
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text('Confidence: ${(d.confidence * 100).round()}%'),
-          const SizedBox(height: 6),
-          LinearProgressIndicator(value: d.confidence, minHeight: 8),
+          // After an agronomist review the model's score no longer describes the result.
+          if (d.reviewedBy != null)
+            Text('Confirmed by an agronomist (model confidence was ${(d.confidence * 100).round()}%)')
+          else ...[
+            Text('Confidence: ${(d.confidence * 100).round()}%'),
+            const SizedBox(height: 6),
+            LinearProgressIndicator(value: d.confidence, minHeight: 8),
+          ],
           const SizedBox(height: 6),
           Text('${cropName(d.cropType)} · ${formatDate(d.capturedAt)}'),
         ]),

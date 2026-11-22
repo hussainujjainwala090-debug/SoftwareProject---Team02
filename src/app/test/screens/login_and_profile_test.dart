@@ -49,6 +49,17 @@ void main() {
     expect(app.session.status, SessionStatus.ready);
   });
 
+  testWidgets('pressing Enter in the password field logs in', (tester) async {
+    final app = TestApp()..session.status = SessionStatus.signedOut;
+    await app.show(tester, const LoginScreen());
+    await tester.enterText(find.byKey(const Key('email')), 'farmer@example.com');
+    await tester.enterText(find.byKey(const Key('password')), 'whatever');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
+    expect(app.backend.sent('GET', '/users/me'), hasLength(1));
+    expect(app.session.status, SessionStatus.ready);
+  });
+
   testWidgets('a signed-in but unregistered account is asked to finish registration', (tester) async {
     final app = TestApp()..session.status = SessionStatus.signedOut;
     app.backend.overrides['GET /users/me'] = (_) => http403();

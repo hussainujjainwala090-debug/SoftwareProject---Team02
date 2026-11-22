@@ -29,6 +29,16 @@ void main() {
     expect(find.text('Agronomist review'), findsNothing);
   });
 
+  testWidgets('a reviewed result says it was confirmed by an agronomist', (tester) async {
+    final app = TestApp();
+    final reviewed = {...fixture('diagnosis_confirmed') as Map<String, dynamic>, 'reviewed_by': 'agro-1'};
+    app.backend.overrides['GET /diagnoses/${app.backend.confirmedId}'] = (_) => httpJson(reviewed);
+    await app.show(tester, ResultScreen(diagnosisId: app.backend.confirmedId));
+    expect(find.text('Reviewed'), findsOneWidget);
+    expect(find.textContaining('Confirmed by an agronomist'), findsOneWidget);
+    expect(find.textContaining('Confidence:'), findsNothing);
+  });
+
   testWidgets('uncertain result: advice, retake and no severity', (tester) async {
     final app = TestApp();
     await app.show(tester, ResultScreen(diagnosisId: app.backend.uncertainId));

@@ -128,6 +128,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       key: const Key('password'),
                       controller: _password,
                       obscureText: true,
+                      textInputAction: TextInputAction.done,
+                      onFieldSubmitted: (_) => _busy ? null : _submit(),
                       decoration: const InputDecoration(labelText: 'Password', border: OutlineInputBorder()),
                       validator: register ? validatePassword : (v) => (v ?? '').isEmpty ? 'Enter your password' : null,
                     ),
