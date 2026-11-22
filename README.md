@@ -130,7 +130,7 @@ Results from 22 Nov 2026, branch `feature/backend`. Full output is in [Docs/test
 | Run | Result |
 |---|---|
 | Unit and API tests (`pytest`) | **144 passed, 0 failed**, statement coverage 92% ([backend_pytest.txt](Docs/test-evidence/backend_pytest.txt)) |
-| End-to-end smoke test over HTTP, live Open-Meteo weather | **21/21 steps passed** ([smoke_test.txt](Docs/test-evidence/smoke_test.txt)) |
+| End-to-end smoke test over HTTP, live Open-Meteo weather | **19/19 steps passed** ([smoke_test.txt](Docs/test-evidence/smoke_test.txt)) |
 | Sample PDF report from the smoke run | [sample_report.pdf](Docs/test-evidence/sample_report.pdf) |
 
 Tests by test case (TC numbers from the traceability matrix):
