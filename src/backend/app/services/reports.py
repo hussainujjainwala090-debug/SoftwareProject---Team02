@@ -64,8 +64,8 @@ class ReportService:
             Paragraph(f"Date: {created_at[:10]}", body),
             Spacer(1, 0.4 * cm),
             Paragraph(f"Farm: {farm['name']}", body),
-            Paragraph(f"Crop: {scan['crop_type'].replace('_', ' ').title()}    "
-                      f"Farmer: {farmer['name'] if farmer else 'removed account'}", body),
+            Paragraph(f"Crop: {scan['crop_type'].replace('_', ' ').title()}", body),
+            Paragraph(f"Farmer: {farmer['name'] if farmer else 'removed account'}", body),
             Paragraph(f"Scan taken: {scan['captured_at'].replace('T', ' ')[:16]} UTC", body),
             Spacer(1, 0.4 * cm),
             Table([[self._photo(scan["image_url"], "Original photo"),
@@ -77,11 +77,14 @@ class ReportService:
         severity = "-"
         if diagnosis["severity_level"]:
             severity = f"{diagnosis['severity_level'].title()} {diagnosis['affected_area_pct']:.0f}%"
+        # After an agronomist review the model's score no longer describes the result.
+        confidence = ("Agronomist review" if diagnosis["reviewed_by"]
+                      else f"{diagnosis['confidence'] * 100:.0f}%")
         results = Table(
             [["Disease", "Confidence", "Severity", "Spread risk"],
-             [label, f"{diagnosis['confidence'] * 100:.0f}%", severity,
+             [label, confidence, severity,
               (diagnosis["spread_risk"] or "unavailable").title()]],
-            colWidths=[6 * cm, 3.5 * cm, 3.5 * cm, 4 * cm])
+            colWidths=[5.5 * cm, 4 * cm, 3.5 * cm, 4 * cm])
         results.setStyle(TableStyle([
             ("GRID", (0, 0), (-1, -1), 0.5, colors.grey),
             ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#e8f0e3")),
