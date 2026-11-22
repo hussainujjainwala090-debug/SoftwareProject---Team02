@@ -55,7 +55,7 @@ Docs/               design documents, diagrams, test evidence
 - A Firebase project only for `firebase` mode; the backend runs and is tested without one
 
 ## Installation
-Backend and ML (Windows PowerShell; on macOS/Linux use `source .venv/bin/activate`):
+Backend and ML (Windows PowerShell; on macOS/Linux use `source .venv/bin/activate`). Tested on Python 3.13; the code avoids 3.11-only features so 3.10 should work, but has not been run on it.:
 ```powershell
 cd src/backend
 python -m venv .venv
@@ -129,7 +129,7 @@ Results from 22 Nov 2026, branch `feature/backend`. Full output is in [Docs/test
 
 | Run | Result |
 |---|---|
-| Unit and API tests (`pytest`) | **144 passed, 0 failed**, statement coverage 92% ([backend_pytest.txt](Docs/test-evidence/backend_pytest.txt)) |
+| Unit and API tests (`pytest`) | **146 passed, 0 failed**, statement coverage 92% ([backend_pytest.txt](Docs/test-evidence/backend_pytest.txt)) |
 | End-to-end smoke test over HTTP, live Open-Meteo weather | **19/19 steps passed** ([smoke_test.txt](Docs/test-evidence/smoke_test.txt)) |
 | Sample PDF report from the smoke run | [sample_report.pdf](Docs/test-evidence/sample_report.pdf) |
 
