@@ -1,5 +1,5 @@
 import sys
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 import pytest
@@ -17,7 +17,7 @@ from app.main import create_app  # noqa: E402
 from app.ml import Prediction  # noqa: E402
 
 ADMIN_EMAIL = "admin@test.com"
-NOW = datetime(2026, 11, 21, 9, 30, tzinfo=UTC)
+NOW = datetime(2026, 11, 21, 9, 30, tzinfo=timezone.utc)
 
 
 class FakeClassifier:
