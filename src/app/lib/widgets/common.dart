@@ -3,6 +3,21 @@ import 'package:material_ui/material_ui.dart';
 
 import '../config.dart';
 
+/// App theme: large buttons for farmers with limited technical experience.
+/// Full-width buttons are the default; buttons placed in a row set their own size.
+ThemeData appTheme() => ThemeData(
+      colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF2E7D32)),
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(52)),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(48)),
+      ),
+    );
+
+/// Style for a button that sits in a row next to other widgets.
+final ButtonStyle compactButton = OutlinedButton.styleFrom(minimumSize: const Size(72, 44));
+
 String cropName(String crop) => cropLabels[crop] ?? crop;
 String formatDate(DateTime d) => DateFormat('d MMM yyyy').format(d.toLocal());
 String titleCase(String s) => s.isEmpty ? s : s[0].toUpperCase() + s.substring(1);

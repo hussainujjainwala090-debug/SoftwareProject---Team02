@@ -9,6 +9,7 @@ import 'package:agriscan/services/api_client.dart';
 import 'package:agriscan/services/auth_service.dart';
 import 'package:agriscan/services/scan_queue.dart';
 import 'package:agriscan/state/session.dart';
+import 'package:agriscan/widgets/common.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
@@ -101,7 +102,8 @@ class TestApp {
           ChangeNotifierProvider.value(value: queue),
           Provider.value(value: api),
         ],
-        child: MaterialApp(home: child),
+        // The real app theme, so layout problems caused by it show up in tests.
+        child: MaterialApp(theme: appTheme(), home: child),
       );
 
   Future<void> show(WidgetTester tester, Widget screen) async {
