@@ -30,7 +30,7 @@ Farmers often spot crop diseases late, and expert advice is not always within re
 | Part | Status |
 |---|---|
 | Design (Docs/) | Complete |
-| Backend (`src/backend`) | Working: all 5 services, 28 endpoints, 144 tests passing |
+| Backend (`src/backend`) | Working: all 5 services, 31 API endpoints, all tests passing |
 | ML (`src/ml`) | Severity segmentation and spread-risk rules working; CNN classifier training next |
 | Mobile app (`src/app`) | Not started |
 
@@ -133,23 +133,40 @@ Results from 22 Nov 2026, branch `feature/backend`. Full output is in [Docs/test
 | End-to-end smoke test over HTTP, live Open-Meteo weather | **19/19 steps passed** ([smoke_test.txt](Docs/test-evidence/smoke_test.txt)) |
 | Sample PDF report from the smoke run | [sample_report.pdf](Docs/test-evidence/sample_report.pdf) |
 
-Tests by test case (TC numbers from the traceability matrix):
+Tests by test case. IDs come from the Requirements Traceability Matrix: TC-01 to TC-18 test FR-01 to FR-18, TC-19 to TC-32 test the NFRs. Only the backend side is covered here; the app side of each case comes with the Flutter app.
 
-| Test case | What is checked | Test file |
+| Test case | What is checked (backend) | Test file |
 |---|---|---|
-| TC-01 (FR-01, NFR-11) | Missing/invalid token gives 401; unregistered or disabled users get 403; no self-made admins; every admin endpoint refuses farmer, farm owner and agronomist (36 cases); admin create/disable/enable/role/remove | `test_auth_users.py` |
+| TC-01 (FR-01) | Missing/invalid token gives 401; unregistered users get 403; register once per account and email; no self-made admins; configured admin email must be verified | `test_auth_users.py` |
 | TC-02 (FR-02) | Farm create/edit, coordinate ranges, crop list, no repeated crops, only the owner edits | `test_farms.py` |
-| TC-03 (FR-03, NFR-02) | Blurry, dark, non-image and over-1 MB uploads are refused; crop must belong to the farm | `test_image_quality.py`, `test_scans.py` |
-| TC-04, TC-05 (FR-04, FR-05) | Confident result is confirmed; below 0.70, wrong crop or unknown label gives "Uncertain" with retake/agronomist advice and no segmentation; agronomist confirms or corrects | `test_scans.py`, `test_review_feedback.py` |
-| TC-06, TC-07 (FR-06, FR-07) | Affected area within 2 points of the known lesion area on synthetic leaves; red overlay produced | `test_severity.py` |
-| TC-08, TC-14 (FR-08, FR-14, NFR-09) | Weather reused, cached up to 6 h with a notice, "unavailable" after 6 h; spread-risk levels | `test_weather_forecast.py`, `test_weather_client.py`, `test_spread_risk.py` |
-| TC-09, TC-17 (FR-09, FR-17) | Treatments by type with safety warnings; admin add/edit/archive/restore; duplicates and invalid entries refused; archived diseases are not used for new scans but old diagnoses keep them | `test_knowledge_base.py`, `test_scans.py` |
-| TC-10, TC-12 (FR-10, FR-12, NFR-08) | History filters; uploading the same offline scan twice returns one diagnosis | `test_scans.py` |
-| TC-11, TC-13, TC-15, TC-16 (FR-11, FR-13, FR-15, FR-16) | Push alert when risk is high; dashboard counts; PDF generated and downloadable; one feedback per diagnosis; accuracy trend for the admin | `test_reports_dashboard.py`, `test_review_feedback.py` |
+| TC-03 (FR-03) | Blurry, dark and non-image uploads are refused; crop must belong to the farm | `test_image_quality.py`, `test_scans.py` |
+| TC-04 (FR-04) | Confident prediction is stored as confirmed with label and confidence; healthy leaves | `test_scans.py` |
+| TC-05 (FR-05) | Below 0.70, wrong crop, unknown label or no model gives "Uncertain" with retake/agronomist advice and no segmentation; agronomist confirms or corrects | `test_scans.py`, `test_review_feedback.py` |
+| TC-06 (FR-06) | Affected area within 2 points of the known lesion area on synthetic leaves; low/medium/high bands | `test_severity.py`, `test_scans.py` |
+| TC-07 (FR-07) | Red overlay produced, stored and downloadable | `test_severity.py`, `test_scans.py` |
+| TC-08 (FR-08) | Spread-risk levels and explanations; recalculated with new weather | `test_spread_risk.py`, `test_weather_forecast.py` |
+| TC-09 (FR-09) | Organic, chemical and preventive treatments, each with a safety warning | `test_scans.py`, `test_knowledge_base.py` |
+| TC-10 (FR-10) | History filters by status, crop, date and disease name; users only see their own | `test_scans.py` |
+| TC-11 (FR-11) | Push alert sent to the farm owner when risk is high, none in dry weather | `test_reports_dashboard.py` |
+| TC-12 (FR-12) | Same offline scan uploaded twice gives one diagnosis; a retry after a failed diagnosis completes it | `test_scans.py` |
+| TC-13 (FR-13) | Dashboard totals, scans per week, common diseases, climate alert | `test_reports_dashboard.py` |
+| TC-14 (FR-14) | Open-Meteo parsing and errors; weather stored and reused | `test_weather_client.py`, `test_weather_forecast.py` |
+| TC-15 (FR-15) | PDF generated, stored and downloadable by link; only allowed users | `test_reports_dashboard.py` |
+| TC-16 (FR-16) | One feedback per diagnosis, only by the farmer | `test_review_feedback.py` |
+| TC-17 (FR-17) | Admin add/edit/archive/restore; no delete; duplicates and invalid entries refused; archived diseases not used for new scans, old diagnoses keep them | `test_knowledge_base.py`, `test_scans.py` |
+| TC-18 (FR-18) | Admin create/disable/enable/change role/remove accounts; disabled users locked out; accuracy trend from feedback | `test_auth_users.py`, `test_review_feedback.py` |
+| TC-20 (NFR-02) | Uploads over 1 MB refused (the app-side compression test comes with the app) | `test_scans.py` |
+| TC-22 (NFR-04) | Mean IoU of 0.70 or more on synthetic leaves only (real masks still needed) | `test_severity.py` |
+| TC-25 (NFR-08) | No duplicate scans or diagnoses on retry | `test_scans.py` |
+| TC-26 (NFR-09) | Fault injection: weather service down, cache used up to 6 h with notice, then "unavailable" | `test_weather_forecast.py` |
+| TC-28 (NFR-11) | Every admin endpoint refuses farmer, farm owner and agronomist tokens (36 cases) | `test_auth_users.py` |
+
+Not covered yet: TC-19 and TC-23 (performance and load, NFR-01 and NFR-06), TC-21 (classifier accuracy, NFR-03, needs the trained model), TC-24 (uptime), TC-27 (TLS, depends on the deployment), TC-29 to TC-31 (privacy, usability and compatibility acceptance tests with the app), TC-32 (code analysis).
 
 Known limits of this prototype (to be stated in the report):
 - The disease classifier is not trained yet, so every new scan is "Uncertain" until an agronomist reviews it or the model is added (next step).
 - Severity uses a colour rule. It matches synthetic test leaves well, but NFR-04 (mean IoU of 0.70 or more) needs leaf masks labelled on real farm photos.
 - Spread risk is rule-based because there is no labelled spread data.
+- The starter knowledge-base treatments (`src/backend/app/seed_data.py`) are general guidance written for the prototype and must be checked by an agronomist before real use.
 - The Firestore, Cloud Storage, Cloud Messaging and Firebase Auth adapters are written but not yet run against a real Firebase project; all tests use the in-memory versions.
 - Performance and load targets (NFR-01, NFR-06) and uptime (NFR-07) have not been measured.
