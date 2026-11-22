@@ -122,9 +122,10 @@ Without a trained model the backend still runs, but every scan is "Uncertain". T
 ```powershell
 python -m venv C:\Users\<you>\agriscan-ml-venv
 C:\Users\<you>\agriscan-ml-venv\Scripts\Activate.ps1
-pip install tensorflow -r src/backend/requirements.txt
+cd src/backend
+pip install tensorflow -r requirements.txt
 ```
-This one environment can run the backend, the tests and the ML scripts.
+Run the install from `src/backend`: `requirements.txt` installs the ML package from `../ml`, a path pip resolves from the current folder. This one environment can run the backend, the tests and the ML scripts.
 
 **2. Get the data.** Download *Plant_leaf_diseases_dataset_without_augmentation.zip* (PlantVillage, Mendeley Data, doi:10.17632/tywbtsjrjv.1, about 830 MB) and extract the 12 tomato and bell-pepper classes to a short folder:
 ```powershell
