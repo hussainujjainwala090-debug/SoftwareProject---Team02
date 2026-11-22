@@ -31,7 +31,7 @@ Farmers often spot crop diseases late, and expert advice is not always within re
 |---|---|
 | Design (Docs/) | Complete |
 | Backend (`src/backend`) | Working: all 5 services, 31 API endpoints, all tests passing |
-| ML (`src/ml`) | Severity segmentation and spread-risk rules working; CNN classifier training next |
+| ML (`src/ml`) | Working: MobileNetV2 disease classifier (93.0% test accuracy on PlantVillage tomato and pepper), severity segmentation, spread-risk rules |
 | Mobile app (`src/app`) | Not started |
 
 ## Repository layout
@@ -44,7 +44,8 @@ src/
     app/repository.py  Firestore and in-memory document store
     firebase/       Firestore and Storage security rules, emulator config
     scripts/        smoke_test.py (end-to-end check of a running server)
-  ml/agriscan_ml/   severity segmentation, spread-risk model (classifier to follow)
+  ml/agriscan_ml/   classifier (train, evaluate, wrapper), severity segmentation, spread risk
+  ml/models/        trained model files (git-ignored; created by training)
   tests/            pytest: backend/ and ml/
 Docs/               design documents, diagrams, test evidence
 ```
@@ -109,6 +110,32 @@ Main endpoints (all under `/api/v1`):
 | Knowledge base (FR-09, FR-17) | `GET /diseases`, `GET /diseases/{id}`, admin: `POST /admin/diseases`, `PUT /admin/diseases/{id}`, `POST /admin/diseases/{id}/archive` or `/restore` |
 | Monitoring and alerts (FR-11, FR-18) | `GET /admin/model-accuracy`, `POST /admin/alerts/check` |
 
+## Disease classifier (ML)
+Without a trained model the backend still runs, but every scan is "Uncertain". To train and use the model:
+
+**1. Make an ML environment at a short path.** TensorFlow's files are too deep for Windows' 260-character path limit if the environment sits inside the project folder (unless long paths are enabled in Windows).
+```powershell
+python -m venv C:\Users\<you>\agriscan-ml-venv
+C:\Users\<you>\agriscan-ml-venv\Scripts\Activate.ps1
+pip install tensorflow -r src/backend/requirements.txt
+```
+This one environment can run the backend, the tests and the ML scripts.
+
+**2. Get the data.** Download *Plant_leaf_diseases_dataset_without_augmentation.zip* (PlantVillage, Mendeley Data, doi:10.17632/tywbtsjrjv.1, about 830 MB) and extract the 12 tomato and bell-pepper classes to a short folder:
+```powershell
+cd src/ml
+python -m agriscan_ml.prepare_data <path-to-zip> C:\Users\<you>\agriscan-data\pv
+```
+
+**3. Train (about 10 minutes on a CPU) and evaluate:**
+```powershell
+python -m agriscan_ml.train --image-dir C:\Users\<you>\agriscan-data\pv
+python -m agriscan_ml.evaluate --image-dir C:\Users\<you>\agriscan-data\pv
+```
+This writes `src/ml/models/classifier.keras`, `labels.json` and `eval.json`. The backend loads them automatically at start-up (paths in `AGRISCAN_CLASSIFIER_MODEL_PATH` and `AGRISCAN_CLASSIFIER_LABELS_PATH`) when it runs in the ML environment.
+
+Method: transfer learning with MobileNetV2 (ImageNet weights, frozen) and a softmax layer trained on its features; within each class the photos are split 80/10/10 into train, validation and test by file order, the same every run. Crops the model was not trained on (date palm, cucumber) and predictions for a different crop than the one selected are shown as "Uncertain".
+
 ## How to test
 From the repository root, with the backend virtual environment active:
 ```powershell
@@ -122,14 +149,16 @@ End-to-end check against a running server (start the server as in *How to run*, 
 ```powershell
 python src/backend/scripts/smoke_test.py http://localhost:8000
 ```
-The tests need no Firebase project, internet or trained model: they use the in-memory store, a fake weather service, a fake classifier and synthetic leaf images.
+The tests need no Firebase project, internet or trained model: they use the in-memory store, a fake weather service, a fake classifier and synthetic leaf images. One classifier test needs TensorFlow and is skipped without it. The trained model itself is checked with `python -m agriscan_ml.evaluate` (see *Disease classifier*).
 
 ## Testing
 Results from 22 Nov 2026, branch `feature/backend`. Full output is in [Docs/test-evidence](Docs/test-evidence).
 
 | Run | Result |
 |---|---|
-| Unit and API tests (`pytest`) | **146 passed, 0 failed**, statement coverage 92% ([backend_pytest.txt](Docs/test-evidence/backend_pytest.txt)) |
+| Unit and API tests (`pytest`, with TensorFlow installed) | **151 passed, 0 failed**, statement coverage 86%; the uncovered code is mainly the real Firebase adapters and the training/evaluation scripts, which are run directly instead ([backend_pytest.txt](Docs/test-evidence/backend_pytest.txt)) |
+| Disease classifier on 2,058 unseen PlantVillage test photos (NFR-03, target 85%) | **93.05% accuracy**; 89.2% of photos are above the 0.70 confidence threshold and 97.1% of those are correct; the rest are shown as "Uncertain" ([classifier_eval.txt](Docs/test-evidence/classifier_eval.txt), [classifier_training_eval.json](Docs/test-evidence/classifier_training_eval.json)) |
+| Real photos through `POST /scans` with the trained model | 11 of 12 classes diagnosed correctly, 1 shown as "Uncertain", both wrong-crop scans "Uncertain" ([real_photo_scans.txt](Docs/test-evidence/real_photo_scans.txt)) |
 | End-to-end smoke test over HTTP, live Open-Meteo weather | **19/19 steps passed** ([smoke_test.txt](Docs/test-evidence/smoke_test.txt)) |
 | Sample PDF report from the smoke run | [sample_report.pdf](Docs/test-evidence/sample_report.pdf) |
 
@@ -140,7 +169,7 @@ Tests by test case. IDs come from the Requirements Traceability Matrix: TC-01 to
 | TC-01 (FR-01) | Missing/invalid token gives 401; unregistered users get 403; register once per account and email; no self-made admins; configured admin email must be verified | `test_auth_users.py` |
 | TC-02 (FR-02) | Farm create/edit, coordinate ranges, crop list, no repeated crops, only the owner edits | `test_farms.py` |
 | TC-03 (FR-03) | Blurry, dark and non-image uploads are refused; crop must belong to the farm | `test_image_quality.py`, `test_scans.py` |
-| TC-04 (FR-04) | Confident prediction is stored as confirmed with label and confidence; healthy leaves | `test_scans.py` |
+| TC-04 (FR-04) | Confident prediction is stored as confirmed with label and confidence; healthy leaves; classifier wrapper; every classifier label has a knowledge-base entry; real photos through the API | `test_scans.py`, `test_classifier.py`, `real_photo_scans.txt` |
 | TC-05 (FR-05) | Below 0.70, wrong crop, unknown label or no model gives "Uncertain" with retake/agronomist advice and no segmentation; agronomist confirms or corrects | `test_scans.py`, `test_review_feedback.py` |
 | TC-06 (FR-06) | Affected area within 2 points of the known lesion area on synthetic leaves; low/medium/high bands | `test_severity.py`, `test_scans.py` |
 | TC-07 (FR-07) | Red overlay produced, stored and downloadable | `test_severity.py`, `test_scans.py` |
@@ -156,16 +185,18 @@ Tests by test case. IDs come from the Requirements Traceability Matrix: TC-01 to
 | TC-17 (FR-17) | Admin add/edit/archive/restore; no delete; duplicates and invalid entries refused; archived diseases not used for new scans, old diagnoses keep them | `test_knowledge_base.py`, `test_scans.py` |
 | TC-18 (FR-18) | Admin create/disable/enable/change role/remove accounts; disabled users locked out; accuracy trend from feedback | `test_auth_users.py`, `test_review_feedback.py` |
 | TC-20 (NFR-02) | Uploads over 1 MB refused (the app-side compression test comes with the app) | `test_scans.py` |
+| TC-21 (NFR-03) | Classifier accuracy 93.05% on 2,058 unseen PlantVillage photos (target 85%) | `classifier_eval.txt` |
 | TC-22 (NFR-04) | Mean IoU of 0.70 or more on synthetic leaves only (real masks still needed) | `test_severity.py` |
 | TC-25 (NFR-08) | No duplicate scans or diagnoses on retry | `test_scans.py` |
 | TC-26 (NFR-09) | Fault injection: weather service down, cache used up to 6 h with notice, then "unavailable" | `test_weather_forecast.py` |
 | TC-28 (NFR-11) | Every admin endpoint refuses farmer, farm owner and agronomist tokens (36 cases) | `test_auth_users.py` |
 
-Not covered yet: TC-19 and TC-23 (performance and load, NFR-01 and NFR-06), TC-21 (classifier accuracy, NFR-03, needs the trained model), TC-24 (uptime), TC-27 (TLS, depends on the deployment), TC-29 to TC-31 (privacy, usability and compatibility acceptance tests with the app), TC-32 (code analysis).
+Not covered yet: TC-19 and TC-23 (performance and load, NFR-01 and NFR-06), TC-24 (uptime), TC-27 (TLS, depends on the deployment), TC-29 to TC-31 (privacy, usability and compatibility acceptance tests with the app), TC-32 (code analysis).
 
 Known limits of this prototype (to be stated in the report):
-- The disease classifier is not trained yet, so every new scan is "Uncertain" until an agronomist reviews it or the model is added (next step).
-- Severity uses a colour rule. It matches synthetic test leaves well, but NFR-04 (mean IoU of 0.70 or more) needs leaf masks labelled on real farm photos.
+- The classifier is trained on PlantVillage, which has lab photos of single leaves on plain backgrounds. Accuracy on real field photos will be lower, and the model covers only tomato and bell pepper: date palm and cucumber need the team's own labelled photos.
+- Severity uses a colour rule inside the leaf outline. It matches synthetic test leaves and gives plausible values on PlantVillage photos, but it misses pale or grey lesions, and NFR-04 (mean IoU of 0.70 or more) needs leaf masks labelled on real farm photos.
+- The blur threshold (20) was set from PlantVillage photos; it should be checked again with real phone photos.
 - Spread risk is rule-based because there is no labelled spread data.
 - The starter knowledge-base treatments (`src/backend/app/seed_data.py`) are general guidance written for the prototype and must be checked by an agronomist before real use.
 - The Firestore, Cloud Storage, Cloud Messaging and Firebase Auth adapters are written but not yet run against a real Firebase project; all tests use the in-memory versions.
