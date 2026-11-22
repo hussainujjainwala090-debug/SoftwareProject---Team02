@@ -55,7 +55,7 @@ Docs/               design documents, diagrams, test evidence
 - A Firebase project only for `firebase` mode; the backend runs and is tested without one
 
 ## Installation
-Backend and ML (Windows PowerShell; on macOS/Linux use `source .venv/bin/activate`). Tested on Python 3.13; the code avoids 3.11-only features so 3.10 should work, but has not been run on it.:
+Backend and ML (Windows PowerShell; on macOS/Linux use `source .venv/bin/activate`). Tested on Python 3.13; the code avoids 3.11-only features so 3.10 should work, but has not been run on it.
 ```powershell
 cd src/backend
 python -m venv .venv
