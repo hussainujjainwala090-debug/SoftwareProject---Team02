@@ -34,6 +34,27 @@ Steps in the app (all PASS unless noted):
   8. UI-8  Knowledge base lists the seeded diseases with Edit and Archive (no
            Delete); Users tab lists Admin ("You") and the farmer with an actions menu.
 
+Second session (same setup, fresh backend), after the fix:
+  9. UI-1  Log in as grower@example.com (two farms). Pressing Enter in the password
+           field did not log in. FIXED with a test (Enter now submits).
+ 10. UI-3  Farm selector appears with two farms; switching to "Liwa date farm"
+           changes the crop list to Cucumber / Date palm.
+ 11. UI-6  Dashboard follows the selected farm (Liwa: 0 scans).
+ 12. UI-4  Pepper bacterial spot result: feedback row now on one line with Yes / No;
+           affected area 8.4%.
+ 13. UI-7  "Save and export report" creates the report and opens the report screen
+           ("Just created", Open and Copy link buttons). The browser pane blocks
+           pop-up windows, so "Open" could not be confirmed here; the PDF link itself
+           is downloaded successfully by the smoke test (smoke_test.txt).
+ 14. UC-01 Register agro@example.com as Agronomist -> only History and Profile tabs;
+           History shows every farm's scans; Uncertain filter lists the target-spot
+           scan; the result shows the uncertain advice and the "Agronomist review"
+           panel (no feedback row); choosing "Tomato target spot" and "Confirm or
+           correct" turns it into a confirmed, reviewed diagnosis with severity LOW,
+           affected area 7.2% and an overlay.
+           FOUND: the result still showed "Confidence: 52%" after review. FIXED with
+           a test: it now says "Confirmed by an agronomist (model confidence was 52%)".
+
 Not checked here (no Android SDK, no Firebase project on this PC): Android/iOS
 builds, live camera, GPS, push notifications, on-phone SQLite (tested only with
 desktop SQLite in unit tests), Firebase sign-in, map tiles on a phone.

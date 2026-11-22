@@ -32,7 +32,7 @@ Farmers often spot crop diseases late, and expert advice is not always within re
 | Design (Docs/) | Complete |
 | Backend (`src/backend`) | Working: all 5 services, 31 API endpoints, all tests passing |
 | ML (`src/ml`) | Working: MobileNetV2 disease classifier (93.0% test accuracy on PlantVillage tomato and pepper), severity segmentation, spread-risk rules |
-| Mobile app (`src/app`) | Working: all 8 screens, offline SQLite queue, 45 tests passing; checked in a browser against the real backend. Not yet run on an Android or iOS device |
+| Mobile app (`src/app`) | Working: all 8 screens, offline SQLite queue, 47 tests passing; checked in a browser against the real backend. Not yet run on an Android or iOS device |
 
 ## Repository layout
 ```
@@ -196,8 +196,8 @@ Results from 22-23 Nov 2026, branches `feature/backend` and `feature/app`. Full 
 | Unit and API tests (`pytest`, with TensorFlow installed) | **151 passed, 0 failed**, statement coverage 86%; the uncovered code is mainly the real Firebase adapters and the training/evaluation scripts, which are run directly instead ([backend_pytest.txt](Docs/test-evidence/backend_pytest.txt)) |
 | Disease classifier on 2,058 unseen PlantVillage test photos (NFR-03, target 85%) | **93.05% accuracy**; 89.2% of photos are above the 0.70 confidence threshold and 97.1% of those are correct; the rest are shown as "Uncertain" ([classifier_eval.txt](Docs/test-evidence/classifier_eval.txt), [classifier_training_eval.json](Docs/test-evidence/classifier_training_eval.json)) |
 | Real photos through `POST /scans` with the trained model | 11 of 12 classes diagnosed correctly, 1 shown as "Uncertain", both wrong-crop scans "Uncertain" ([real_photo_scans.txt](Docs/test-evidence/real_photo_scans.txt)) |
-| Mobile app: `flutter analyze` and `flutter test` | **No issues; 45 passed, 0 failed** ([app_flutter_test.txt](Docs/test-evidence/app_flutter_test.txt)) |
-| Mobile app in a browser against the real backend and model | 8 checks passed; found and fixed one layout bug ([app_browser_check.txt](Docs/test-evidence/app_browser_check.txt)) |
+| Mobile app: `flutter analyze` and `flutter test` | **No issues; 47 passed, 0 failed** ([app_flutter_test.txt](Docs/test-evidence/app_flutter_test.txt)) |
+| Mobile app in a browser against the real backend and model | 14 checks passed; found and fixed 3 problems ([app_browser_check.txt](Docs/test-evidence/app_browser_check.txt)) |
 | End-to-end smoke test over HTTP, live Open-Meteo weather | **19/19 steps passed** ([smoke_test.txt](Docs/test-evidence/smoke_test.txt)) |
 | Sample PDF report from the smoke run | [sample_report.pdf](Docs/test-evidence/sample_report.pdf) |
 
