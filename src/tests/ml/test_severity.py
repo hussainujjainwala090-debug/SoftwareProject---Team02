@@ -18,6 +18,15 @@ def test_affected_area_matches_known_lesion_area(radius, fmt):
     assert est.affected_area_pct == pytest.approx(truth, abs=2.0)
 
 
+def test_brown_background_is_not_counted_as_lesion():
+    """Soil or a brown table around the leaf must not raise the affected area."""
+    rgb, leaf, lesion = leaf_arrays(25)
+    rgb[~leaf] = (150, 110, 70)  # saturated brown background
+    truth = lesion.sum() / leaf.sum() * 100
+    est = severity.estimate(encode(rgb))
+    assert est.affected_area_pct == pytest.approx(truth, abs=3.0)
+
+
 def test_healthy_leaf_has_no_affected_area():
     assert severity.estimate(leaf_png(lesion_radius=0)).affected_area_pct == 0.0
 
