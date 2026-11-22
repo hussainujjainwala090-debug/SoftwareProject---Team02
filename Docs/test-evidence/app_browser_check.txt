@@ -1,0 +1,39 @@
+# AgriScan app: manual end-to-end check in a browser
+# Date: 2026-11-22 (UTC)  Branch: feature/app
+# Setup: backend in memory mode with the trained classifier (ML environment), live
+# Open-Meteo weather; Flutter web build (flutter build web) served on localhost:8080;
+# AUTH_MODE=dev. Six real PlantVillage test photos were uploaded for the farmer through
+# POST /api/v1/scans first, because the browser's file picker cannot be driven here.
+
+Uploads through the API with the trained model (crop sent -> result):
+  Tomato early blight photo,        tomato    -> Uncertain (confidence 0.50)
+  Tomato Septoria leaf spot photo,  tomato    -> Tomato Septoria leaf spot (0.92), severity low
+  Pepper bacterial spot photo,      pepper    -> Pepper bacterial spot (0.94), severity low
+  Tomato leaf mold photo,           tomato    -> Tomato leaf mold (0.99), severity low
+  Tomato target spot photo,         tomato    -> Uncertain (0.52)
+  Tomato leaf mold photo,           date palm -> Uncertain (wrong crop selected)
+
+Steps in the app (all PASS unless noted):
+  1. UI-1  Log in as farmer@example.com -> Scan tab opens with the farm's crops.
+  2. UI-3  Capture screen shows crop drop-down and guide frame. Camera access is
+           blocked in this browser, so live capture was NOT checked here.
+  3. UI-5  History lists the 6 scans with photo thumbnails from the backend;
+           Confirmed filter works.
+  4. UI-4  Result for Tomato leaf mold: overlay image with marked area,
+           Original/Overlay switch, confidence 99%, severity LOW, spread risk MEDIUM
+           with live weather (23 C, humidity 65%, rain 0 mm), treatment tabs with
+           safety warning.
+           FOUND: "Was this correct?" was squeezed to one letter per line by the
+           theme's full-width buttons; affected area showed "0%" for 0.4%.
+           FIXED in commit 2c28a65, with a regression test; widget tests now use
+           the app theme.
+  5. UI-6  Dashboard: 6 scans, 3 diseases, 3 uncertain; scans per week chart,
+           most common diseases, climate alert "MEDIUM spread risk" with live weather.
+  6. UI-2  Profile lists the farm with its crops; sign out works.
+  7. UI-1  Register admin@example.com (configured first admin) -> Admin tab appears.
+  8. UI-8  Knowledge base lists the seeded diseases with Edit and Archive (no
+           Delete); Users tab lists Admin ("You") and the farmer with an actions menu.
+
+Not checked here (no Android SDK, no Firebase project on this PC): Android/iOS
+builds, live camera, GPS, push notifications, on-phone SQLite (tested only with
+desktop SQLite in unit tests), Firebase sign-in, map tiles on a phone.

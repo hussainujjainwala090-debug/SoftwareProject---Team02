@@ -32,7 +32,7 @@ Farmers often spot crop diseases late, and expert advice is not always within re
 | Design (Docs/) | Complete |
 | Backend (`src/backend`) | Working: all 5 services, 31 API endpoints, all tests passing |
 | ML (`src/ml`) | Working: MobileNetV2 disease classifier (93.0% test accuracy on PlantVillage tomato and pepper), severity segmentation, spread-risk rules |
-| Mobile app (`src/app`) | Not started |
+| Mobile app (`src/app`) | Working: all 8 screens, offline SQLite queue, 45 tests passing; checked in a browser against the real backend. Not yet run on an Android or iOS device |
 
 ## Repository layout
 ```
@@ -47,12 +47,17 @@ src/
   ml/agriscan_ml/   classifier (train, evaluate, wrapper), severity segmentation, spread risk
   ml/models/        trained model files (git-ignored; created by training)
   tests/            pytest: backend/ and ml/
+  app/              Flutter app (presentation tier)
+    lib/screens/    the 8 screens (UI-1 to UI-8) and the bottom navigation
+    lib/services/   API client, sign-in, image checks, offline SQLite queue
+    test/           unit and widget tests; fixtures are real backend responses
 Docs/               design documents, diagrams, test evidence
 ```
 
 ## Prerequisites
 - Python 3.10 or newer (tested with 3.13)
-- Flutter SDK (for the mobile app, once added)
+- Flutter SDK 3.50 or newer (tested with 3.50.1), in a short path such as `C:\src\flutter`
+- To run the app on a phone: Android Studio with the Android SDK (or Xcode for iOS). Chrome is enough to try it in a browser.
 - A Firebase project only for `firebase` mode; the backend runs and is tested without one
 
 ## Installation
@@ -136,8 +141,39 @@ This writes `src/ml/models/classifier.keras`, `labels.json` and `eval.json`. The
 
 Method: transfer learning with MobileNetV2 (ImageNet weights, frozen) and a softmax layer trained on its features; within each class the photos are split 80/10/10 into train, validation and test by file order, the same every run. Crops the model was not trained on (date palm, cucumber) and predictions for a different crop than the one selected are shown as "Uncertain".
 
+## Mobile app
+Install the packages once:
+```powershell
+cd src/app
+flutter pub get
+```
+Run it against the backend (start the backend first, as in *How to run*). Settings are passed with `--dart-define`:
+
+| Setting | Meaning | Default |
+|---|---|---|
+| `API_BASE_URL` | Backend address. From the Android emulator the PC is `http://10.0.2.2:8000` | `http://localhost:8000` |
+| `AUTH_MODE` | `dev` (development tokens, backend in memory mode) or `firebase` | `dev` |
+
+In a browser (quick preview; the offline queue is kept in memory there, not in SQLite):
+```powershell
+flutter run -d chrome --dart-define=API_BASE_URL=http://localhost:8000
+```
+On an Android emulator or phone:
+```powershell
+flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8000
+```
+In `dev` mode any email signs in and the password is not checked. Register with the email listed in `AGRISCAN_ADMIN_EMAILS` to get the admin screens. For `firebase` mode, add the Firebase project's app config (for example with `flutterfire configure`) and run with `--dart-define=AUTH_MODE=firebase`; the backend must then run in `firebase` mode too.
+
 ## How to test
-From the repository root, with the backend virtual environment active:
+Mobile app (from `src/app`):
+```powershell
+flutter analyze
+```
+```powershell
+flutter test
+```
+
+Backend and ML, from the repository root, with the backend virtual environment active:
 ```powershell
 python -m pytest
 ```
@@ -152,13 +188,15 @@ python src/backend/scripts/smoke_test.py http://localhost:8000
 The tests need no Firebase project, internet or trained model: they use the in-memory store, a fake weather service, a fake classifier and synthetic leaf images. One classifier test needs TensorFlow and is skipped without it. The trained model itself is checked with `python -m agriscan_ml.evaluate` (see *Disease classifier*).
 
 ## Testing
-Results from 22 Nov 2026, branch `feature/backend`. Full output is in [Docs/test-evidence](Docs/test-evidence).
+Results from 22-23 Nov 2026, branches `feature/backend` and `feature/app`. Full output is in [Docs/test-evidence](Docs/test-evidence).
 
 | Run | Result |
 |---|---|
 | Unit and API tests (`pytest`, with TensorFlow installed) | **151 passed, 0 failed**, statement coverage 86%; the uncovered code is mainly the real Firebase adapters and the training/evaluation scripts, which are run directly instead ([backend_pytest.txt](Docs/test-evidence/backend_pytest.txt)) |
 | Disease classifier on 2,058 unseen PlantVillage test photos (NFR-03, target 85%) | **93.05% accuracy**; 89.2% of photos are above the 0.70 confidence threshold and 97.1% of those are correct; the rest are shown as "Uncertain" ([classifier_eval.txt](Docs/test-evidence/classifier_eval.txt), [classifier_training_eval.json](Docs/test-evidence/classifier_training_eval.json)) |
 | Real photos through `POST /scans` with the trained model | 11 of 12 classes diagnosed correctly, 1 shown as "Uncertain", both wrong-crop scans "Uncertain" ([real_photo_scans.txt](Docs/test-evidence/real_photo_scans.txt)) |
+| Mobile app: `flutter analyze` and `flutter test` | **No issues; 45 passed, 0 failed** ([app_flutter_test.txt](Docs/test-evidence/app_flutter_test.txt)) |
+| Mobile app in a browser against the real backend and model | 8 checks passed; found and fixed one layout bug ([app_browser_check.txt](Docs/test-evidence/app_browser_check.txt)) |
 | End-to-end smoke test over HTTP, live Open-Meteo weather | **19/19 steps passed** ([smoke_test.txt](Docs/test-evidence/smoke_test.txt)) |
 | Sample PDF report from the smoke run | [sample_report.pdf](Docs/test-evidence/sample_report.pdf) |
 
@@ -191,7 +229,21 @@ Tests by test case. IDs come from the Requirements Traceability Matrix: TC-01 to
 | TC-26 (NFR-09) | Fault injection: weather service down, cache used up to 6 h with notice, then "unavailable" | `test_weather_forecast.py` |
 | TC-28 (NFR-11) | Every admin endpoint refuses farmer, farm owner and agronomist tokens (36 cases) | `test_auth_users.py` |
 
-Not covered yet: TC-19 and TC-23 (performance and load, NFR-01 and NFR-06), TC-24 (uptime), TC-27 (TLS, depends on the deployment), TC-29 to TC-31 (privacy, usability and compatibility acceptance tests with the app), TC-32 (code analysis).
+App tests (in `src/app/test`) for the same cases:
+
+| Test case | What is checked (app) | Test file |
+|---|---|---|
+| TC-01 | Login and register validation, roles offered (no admin), unregistered account finishes registration, tabs per role | `login_and_profile_test.dart`, `api_client_test.dart` |
+| TC-02 | Farm profile validation (name, coordinates, crops) and what is saved | `login_and_profile_test.dart` |
+| TC-03, TC-20 (NFR-02) | Blur, darkness and non-image checks on the phone; a 10 MB photo compressed to 1 MB or less; blurry photos are not uploaded | `image_tools_test.dart`, `capture_test.dart` |
+| TC-04 to TC-09 | Result screen: label, confidence, severity, spread risk with weather, treatment tabs, uncertain advice; agronomist review | `result_history_test.dart`, `models_test.dart` |
+| TC-10 | History filters and date/disease search | `result_history_test.dart` |
+| TC-12, TC-25 (FR-12, NFR-08) | Offline queue on real SQLite: pending, retry with the same scan_id, refused scans marked failed, restart recovery; offline capture then retry from the screen | `scan_queue_test.dart`, `capture_test.dart` |
+| TC-13 | Dashboard totals, weekly chart, common diseases, climate alert | `dashboard_admin_test.dart` |
+| TC-15, TC-16 | PDF export and share link; feedback sent once | `result_history_test.dart` |
+| TC-17, TC-18 | Admin knowledge base (no delete), validated disease form, user actions, accuracy | `dashboard_admin_test.dart` |
+
+Not covered yet: TC-19 and TC-23 (performance and load, NFR-01 and NFR-06), TC-24 (uptime), TC-27 (TLS, depends on the deployment), TC-29 and TC-30 (privacy and usability acceptance tests with real users), TC-31 (compatibility on Android 10+ and iOS devices), TC-32 (code analysis report).
 
 Known limits of this prototype (to be stated in the report):
 - The classifier is trained on PlantVillage, which has lab photos of single leaves on plain backgrounds. Accuracy on real field photos will be lower, and the model covers only tomato and bell pepper: date palm and cucumber need the team's own labelled photos.
@@ -200,4 +252,5 @@ Known limits of this prototype (to be stated in the report):
 - Spread risk is rule-based because there is no labelled spread data.
 - The starter knowledge-base treatments (`src/backend/app/seed_data.py`) are general guidance written for the prototype and must be checked by an agronomist before real use.
 - The Firestore, Cloud Storage, Cloud Messaging and Firebase Auth adapters are written but not yet run against a real Firebase project; all tests use the in-memory versions.
+- The app has not been built or run on an Android or iOS device (no Android SDK on the development PC). Live camera, GPS, push notifications and on-phone SQLite are therefore untested on a phone; the queue is tested with desktop SQLite and the screens with widget tests and a browser.
 - Performance and load targets (NFR-01, NFR-06) and uptime (NFR-07) have not been measured.
