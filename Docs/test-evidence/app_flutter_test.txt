@@ -1,56 +1,58 @@
 # AgriScan mobile app: static analysis and tests
-# Date: 2026-11-22T22:06Z  Branch: feature/app  Flutter 3.50.1 • channel stable • https://github.com/flutter/flutter.git
+# Date: 2026-11-22T22:26Z  Branch: feature/app  Flutter 3.50.1 • channel stable • https://github.com/flutter/flutter.git
 # Commands (src/app): flutter analyze ; flutter test -r expanded
 
 ## flutter analyze
 Analyzing app...                                                
-No issues found! (ran in 9.6s)
+No issues found! (ran in 19.1s)
 
 ## flutter test
 00:00 +0: loading test/screens/capture_test.dart
 00:00 +0: test/screens/capture_test.dart: shows the farm crops, guide frame, gallery and capture buttons
-00:00 +1: test/screens/capture_test.dart: shows the farm crops, guide frame, gallery and capture buttons
-00:00 +2: test/screens/capture_test.dart: shows the farm crops, guide frame, gallery and capture buttons
-00:00 +3: test/screens/capture_test.dart: shows the farm crops, guide frame, gallery and capture buttons
-00:00 +4: test/screens/capture_test.dart: shows the farm crops, guide frame, gallery and capture buttons
-00:00 +5: test/screens/capture_test.dart: shows the farm crops, guide frame, gallery and capture buttons
-00:00 +6: test/screens/capture_test.dart: shows the farm crops, guide frame, gallery and capture buttons
+00:01 +1: test/screens/capture_test.dart: shows the farm crops, guide frame, gallery and capture buttons
+00:01 +2: test/screens/capture_test.dart: shows the farm crops, guide frame, gallery and capture buttons
+00:01 +3: test/screens/capture_test.dart: shows the farm crops, guide frame, gallery and capture buttons
+00:01 +4: test/screens/capture_test.dart: shows the farm crops, guide frame, gallery and capture buttons
+00:01 +5: test/screens/capture_test.dart: shows the farm crops, guide frame, gallery and capture buttons
+00:01 +6: test/screens/capture_test.dart: shows the farm crops, guide frame, gallery and capture buttons
 00:01 +7: test/screens/dashboard_admin_test.dart: dashboard shows totals, weekly scans, common diseases and climate alert
 00:01 +8: test/screens/dashboard_admin_test.dart: dashboard shows totals, weekly scans, common diseases and climate alert
-00:01 +9: test/screens/login_and_profile_test.dart: login checks the fields before sending anything
-00:01 +10: test/screens/login_and_profile_test.dart: login checks the fields before sending anything
-00:01 +11: test/screens/login_and_profile_test.dart: login checks the fields before sending anything
-00:01 +12: test/screens/login_and_profile_test.dart: login checks the fields before sending anything
-00:01 +13: test/screens/login_and_profile_test.dart: login checks the fields before sending anything
-00:01 +14: test/screens/login_and_profile_test.dart: login checks the fields before sending anything
-00:01 +15: test/screens/login_and_profile_test.dart: login checks the fields before sending anything
-00:01 +16: test/screens/login_and_profile_test.dart: login checks the fields before sending anything
-00:01 +17: test/screens/login_and_profile_test.dart: login checks the fields before sending anything
-00:01 +18: test/screens/result_history_test.dart: confirmed result: disease, confidence, severity, spread risk, treatments
-00:01 +19: test/screens/capture_test.dart: a blurry photo asks for a retake and is not uploaded
-00:02 +20: test/screens/capture_test.dart: a blurry photo asks for a retake and is not uploaded
-00:02 +21: test/screens/capture_test.dart: a blurry photo asks for a retake and is not uploaded
-00:02 +22: test/screens/capture_test.dart: a blurry photo asks for a retake and is not uploaded
-00:02 +23: test/screens/capture_test.dart: a blurry photo asks for a retake and is not uploaded
-00:02 +24: test/screens/capture_test.dart: a blurry photo asks for a retake and is not uploaded
-00:02 +25: test/screens/capture_test.dart: a blurry photo asks for a retake and is not uploaded
-00:02 +26: test/screens/capture_test.dart: a blurry photo asks for a retake and is not uploaded
-00:02 +27: test/screens/capture_test.dart: a blurry photo asks for a retake and is not uploaded
-00:02 +28: test/screens/capture_test.dart: a blurry photo asks for a retake and is not uploaded
-00:02 +29: test/screens/capture_test.dart: a blurry photo asks for a retake and is not uploaded
-00:02 +30: test/screens/capture_test.dart: a blurry photo asks for a retake and is not uploaded
-00:02 +31: test/screens/capture_test.dart: a blurry photo asks for a retake and is not uploaded
-00:03 +32: test/screens/capture_test.dart: a blurry photo asks for a retake and is not uploaded
-00:03 +33: test/screens/capture_test.dart: a blurry photo asks for a retake and is not uploaded
-00:03 +34: test/screens/capture_test.dart: a blurry photo asks for a retake and is not uploaded
-00:03 +35: test/screens/capture_test.dart: a blurry photo asks for a retake and is not uploaded
-00:03 +36: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
-00:03 +37: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
-00:03 +38: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
-00:03 +39: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
-00:03 +40: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
-00:04 +41: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
-00:05 +42: test/screens/capture_test.dart: a good photo is uploaded and the result opens
-00:05 +43: test/screens/capture_test.dart: offline: the scan is kept as pending and shown in the queue note
-00:08 +44: test/screens/capture_test.dart: a farmer without a farm is asked to create one first
-00:08 +45: All tests passed!
+00:01 +9: test/screens/dashboard_admin_test.dart: dashboard shows totals, weekly scans, common diseases and climate alert
+00:01 +10: test/screens/dashboard_admin_test.dart: dashboard shows totals, weekly scans, common diseases and climate alert
+00:01 +11: test/screens/dashboard_admin_test.dart: dashboard shows totals, weekly scans, common diseases and climate alert
+00:02 +12: test/screens/login_and_profile_test.dart: login checks the fields before sending anything
+00:02 +13: test/screens/login_and_profile_test.dart: login checks the fields before sending anything
+00:02 +14: test/screens/login_and_profile_test.dart: login checks the fields before sending anything
+00:02 +15: test/screens/login_and_profile_test.dart: login checks the fields before sending anything
+00:02 +16: test/screens/login_and_profile_test.dart: login checks the fields before sending anything
+00:02 +17: test/screens/result_history_test.dart: confirmed result: disease, confidence, severity, spread risk, treatments
+00:02 +18: test/screens/result_history_test.dart: confirmed result: disease, confidence, severity, spread risk, treatments
+00:03 +19: test/screens/capture_test.dart: a blurry photo asks for a retake and is not uploaded
+00:03 +20: test/screens/capture_test.dart: a blurry photo asks for a retake and is not uploaded
+00:03 +21: test/screens/capture_test.dart: a blurry photo asks for a retake and is not uploaded
+00:03 +22: test/screens/capture_test.dart: a blurry photo asks for a retake and is not uploaded
+00:03 +23: test/screens/capture_test.dart: a blurry photo asks for a retake and is not uploaded
+00:04 +24: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
+00:04 +25: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
+00:04 +26: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
+00:04 +27: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
+00:04 +28: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
+00:04 +29: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
+00:04 +30: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
+00:04 +31: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
+00:04 +32: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
+00:04 +33: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
+00:04 +34: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
+00:04 +35: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
+00:04 +36: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
+00:05 +37: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
+00:05 +38: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
+00:05 +39: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
+00:05 +40: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
+00:05 +41: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
+00:06 +42: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
+00:06 +43: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
+00:06 +44: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
+00:08 +45: test/screens/capture_test.dart: offline: the scan is kept as pending and shown in the queue note
+00:09 +46: test/screens/capture_test.dart: a farmer without a farm is asked to create one first
+00:09 +47: All tests passed!
