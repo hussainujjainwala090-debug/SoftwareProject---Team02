@@ -52,7 +52,11 @@ class UserService:
         if not claims.email:
             raise Invalid("The sign-in account has no email address")
         if claims.email.lower() in self.admin_emails:
-            role = Role.admin  # configured first admin (AGRISCAN_ADMIN_EMAILS)
+            # Configured first admin (AGRISCAN_ADMIN_EMAILS). The address must be
+            # verified, or anyone could sign up with it and become admin.
+            if not claims.email_verified:
+                raise Forbidden("Verify this email address before registering as admin")
+            role = Role.admin
         elif role not in SELF_REGISTER_ROLES:
             raise Forbidden("Admin accounts can only be created by an admin")
         return self._insert(claims.uid, claims.email, name, role)

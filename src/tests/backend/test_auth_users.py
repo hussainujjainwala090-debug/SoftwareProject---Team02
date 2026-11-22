@@ -67,6 +67,17 @@ def test_configured_admin_email_gets_admin_role(client):
     assert client.get(f"{API}/users/me", headers=headers).json()["role"] == "admin"
 
 
+def test_admin_email_must_be_verified(container):
+    from app.adapters.auth import TokenClaims
+    from app.errors import Forbidden
+    from app.schemas import Role
+
+    unverified = TokenClaims(uid="squatter", email=ADMIN_EMAIL, email_verified=False)
+    with pytest.raises(Forbidden):
+        container.users.register(unverified, "Squatter", Role.farmer)
+    assert container.users.by_firebase_uid("squatter") is None
+
+
 def test_register_validates_input(client):
     resp = client.post(f"{API}/users/register", json={"name": "", "role": "farmer"}, headers=auth("x"))
     assert resp.status_code == 422

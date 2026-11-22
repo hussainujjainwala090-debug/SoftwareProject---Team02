@@ -21,6 +21,7 @@ class AccountDisabledError(Exception):
 class TokenClaims:
     uid: str
     email: str | None
+    email_verified: bool = False
 
 
 class TokenVerifier(Protocol):
@@ -72,7 +73,7 @@ class DevTokenVerifier:
         uid, email = parts[1], parts[2] or None
         if self._accounts.is_disabled(uid):
             raise AccountDisabledError(uid)
-        return TokenClaims(uid=uid, email=email)
+        return TokenClaims(uid=uid, email=email, email_verified=True)
 
 
 # ------------------------------------------------------------- firebase ----
@@ -90,7 +91,8 @@ class FirebaseTokenVerifier:
         except (ValueError, auth.InvalidIdTokenError, auth.ExpiredIdTokenError,
                 auth.RevokedIdTokenError, auth.CertificateFetchError) as exc:
             raise InvalidTokenError(str(exc)) from exc
-        return TokenClaims(uid=decoded["uid"], email=decoded.get("email"))
+        return TokenClaims(uid=decoded["uid"], email=decoded.get("email"),
+                           email_verified=bool(decoded.get("email_verified", False)))
 
 
 class FirebaseAccountAdmin:
