@@ -1,121 +1,95 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:path/path.dart' as p;
+import 'package:provider/provider.dart';
+import 'package:sqflite/sqflite.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+import 'config.dart';
+import 'screens/home_shell.dart';
+import 'screens/login_screen.dart';
+import 'services/api_client.dart';
+import 'services/auth_service.dart';
+import 'services/scan_queue.dart';
+import 'state/session.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  const config = AppConfig.fromEnvironment;
 
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
+  final AuthService auth;
+  if (config.useFirebase) {
+    await Firebase.initializeApp(); // needs the app's Firebase config files
+    auth = FirebaseAuthService();
+  } else {
+    auth = DevAuthService();
   }
+  final api = ApiClient(baseUrl: config.apiBaseUrl, auth: auth);
+
+  // SQLite on the phone; the browser preview keeps the queue in memory only.
+  final QueueStore store = kIsWeb
+      ? MemoryQueueStore()
+      : await SqliteQueueStore.open(p.join(await getDatabasesPath(), 'agriscan_queue.db'));
+  final queue = ScanQueue(store, (s) => api.uploadScan(
+      scanId: s.scanId, farmId: s.farmId, cropType: s.cropType, capturedAt: s.capturedAt, jpeg: s.image));
+  await queue.load();
+
+  final session = Session(api, auth, onReady: config.useFirebase ? _registerForPush : null);
+  // Upload queued scans when the connection comes back (FR-12).
+  Connectivity().onConnectivityChanged.listen((result) {
+    if (session.status == SessionStatus.ready && !result.contains(ConnectivityResult.none)) {
+      queue.syncAll();
+    }
+  });
+
+  runApp(AgriScanApp(session: session, queue: queue));
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
+/// Send this phone's FCM token to the backend for climate alerts (FR-11).
+Future<void> _registerForPush(ApiClient api) async {
+  final messaging = FirebaseMessaging.instance;
+  await messaging.requestPermission();
+  // The backend sends with messaging.Message(token=...), which needs the FCM
+  // registration token. The newer register()/onRegistered API gives an
+  // installation ID for a different send method, so the token API is kept.
+  // ignore: deprecated_member_use
+  final token = await messaging.getToken();
+  if (token != null) await api.setFcmToken(token);
+  // ignore: deprecated_member_use
+  messaging.onTokenRefresh.listen(api.setFcmToken);
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+class AgriScanApp extends StatelessWidget {
+  const AgriScanApp({super.key, required this.session, required this.queue});
+  final Session session;
+  final ScanQueue queue;
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: .center,
-          children: [
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: session),
+        ChangeNotifierProvider.value(value: queue),
+        Provider.value(value: session.api),
+      ],
+      child: MaterialApp(
+        title: 'AgriScan',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF2E7D32)),
+          filledButtonTheme: FilledButtonThemeData(
+            style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(52)),
+          ),
+          outlinedButtonTheme: OutlinedButtonThemeData(
+            style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(48)),
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        home: Consumer<Session>(
+          builder: (context, s, _) =>
+              s.status == SessionStatus.ready ? const HomeShell() : const LoginScreen(),
+        ),
       ),
     );
   }
