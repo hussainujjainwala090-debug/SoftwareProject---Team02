@@ -150,7 +150,7 @@ class _ResultScreenState extends State<ResultScreen> {
   Widget _severityCard(Diagnosis d) => InfoCard(
         title: 'Severity',
         trailing: LevelChip(d.severityLevel),
-        child: Text('Affected leaf area: ${d.affectedAreaPct?.toStringAsFixed(0) ?? '-'}%'),
+        child: Text('Affected leaf area: ${d.affectedAreaPct?.toStringAsFixed(1) ?? '-'}%'),
       );
 
   Widget _riskCard(Diagnosis d) {
@@ -179,9 +179,9 @@ class _ResultScreenState extends State<ResultScreen> {
           if (_feedback != null)
             Text(_feedback! ? 'You said yes. Thank you!' : 'You said no. Thank you!')
           else ...[
-            OutlinedButton(onPressed: () => _sendFeedback(true), child: const Text('Yes')),
+            OutlinedButton(style: compactButton, onPressed: () => _sendFeedback(true), child: const Text('Yes')),
             const SizedBox(width: 8),
-            OutlinedButton(onPressed: () => _sendFeedback(false), child: const Text('No')),
+            OutlinedButton(style: compactButton, onPressed: () => _sendFeedback(false), child: const Text('No')),
           ],
         ]),
       );

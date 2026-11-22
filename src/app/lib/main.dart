@@ -14,6 +14,7 @@ import 'services/api_client.dart';
 import 'services/auth_service.dart';
 import 'services/scan_queue.dart';
 import 'state/session.dart';
+import 'widgets/common.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -77,15 +78,7 @@ class AgriScanApp extends StatelessWidget {
       child: MaterialApp(
         title: 'AgriScan',
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF2E7D32)),
-          filledButtonTheme: FilledButtonThemeData(
-            style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(52)),
-          ),
-          outlinedButtonTheme: OutlinedButtonThemeData(
-            style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(48)),
-          ),
-        ),
+        theme: appTheme(),
         home: Consumer<Session>(
           builder: (context, s, _) =>
               s.status == SessionStatus.ready ? const HomeShell() : const LoginScreen(),

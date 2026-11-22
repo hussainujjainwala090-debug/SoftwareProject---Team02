@@ -50,6 +50,16 @@ void main() {
     expect(find.text('You said yes. Thank you!'), findsOneWidget);
   });
 
+  testWidgets('feedback question is laid out on one line next to its buttons', (tester) async {
+    // Regression: the theme's full-width buttons once squeezed the question
+    // into a one-letter-wide column (seen in the browser check).
+    final app = TestApp();
+    await app.show(tester, ResultScreen(diagnosisId: app.backend.confirmedId));
+    await scrollTo(tester, find.text('Was this correct?'));
+    expect(tester.getSize(find.text('Was this correct?')).width, greaterThan(100));
+    expect(tester.getSize(find.widgetWithText(OutlinedButton, 'Yes')).width, lessThan(150));
+  });
+
   testWidgets('agronomist confirms an uncertain result with the correct disease', (tester) async {
     final app = TestApp(role: 'agronomist');
     await app.show(tester, ResultScreen(diagnosisId: app.backend.uncertainId));
