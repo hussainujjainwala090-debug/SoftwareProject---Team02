@@ -101,13 +101,23 @@ class ScanService:
             self.repo.create(SCANS, scan_id, scan)
         except AlreadyExistsError:
             return self._existing(user, self.repo.get(SCANS, scan_id))
-        diagnosis = self._diagnose(scan, image, farm)
-        self.repo.create(DIAGNOSES, scan_id, diagnosis)
+        self._store_diagnosis(scan, image, farm)
         return self.detail(user, scan_id)
+
+    def _store_diagnosis(self, scan: dict, image: bytes, farm: dict) -> None:
+        try:
+            self.repo.create(DIAGNOSES, scan["scan_id"], self._diagnose(scan, image, farm))
+        except AlreadyExistsError:
+            pass  # a parallel retry finished first; keep its result
 
     def _existing(self, user: dict, scan: dict) -> dict:
         if scan["user_id"] != user["user_id"]:
             raise Conflict("This scan_id is already used")
+        if self.repo.get(DIAGNOSES, scan["scan_id"]) is None:
+            # The scan was saved but its diagnosis failed (e.g. a crash); the
+            # app's retry from the offline queue finishes it from the stored image.
+            farm = self.farms.get(scan["farm_id"])
+            self._store_diagnosis(scan, self.storage.download(scan["image_url"]), farm)
         return self.detail(user, scan["scan_id"])
 
     def _diagnose(self, scan: dict, image: bytes, farm: dict) -> dict:

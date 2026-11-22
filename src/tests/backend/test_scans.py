@@ -1,5 +1,6 @@
 """TC-03 to TC-07, TC-09, TC-10, TC-12: the scan and diagnosis workflow (SD-1)."""
 import pytest
+from fastapi.testclient import TestClient
 
 from app.ml import Prediction
 from conftest import register
@@ -87,6 +88,28 @@ def test_offline_reupload_with_same_scan_id_is_not_duplicated(client, farmer, fa
     assert first.status_code == again.status_code == 201
     assert first.json()["diagnosis_id"] == again.json()["diagnosis_id"] == "offline-0001"
     assert first.json()["captured_at"] == "2026-11-20T08:00:00+00:00"
+    assert len(container.repo.find("scans")) == 1 and len(container.repo.find("diagnoses")) == 1
+
+
+def test_retry_after_failed_diagnosis_completes_it(client, farmer, farm, container):
+    """If diagnosis fails after the scan is saved, the offline retry must finish it."""
+    real = container.scans.segmenter
+
+    class FailsOnce:
+        calls = 0
+
+        def segment(self, image):
+            FailsOnce.calls += 1
+            if FailsOnce.calls == 1:
+                raise RuntimeError("segmentation crashed")
+            return real.segment(image)
+
+    container.scans.segmenter = FailsOnce()
+    no_raise = TestClient(client.app, raise_server_exceptions=False)
+    first = upload(no_raise, farmer, farm, scan_id="retry-0001")
+    assert first.status_code == 500
+    again = upload(client, farmer, farm, scan_id="retry-0001")
+    assert again.status_code == 201 and again.json()["status"] == "confirmed"
     assert len(container.repo.find("scans")) == 1 and len(container.repo.find("diagnoses")) == 1
 
 
