@@ -1,0 +1,8 @@
+# Never convert line endings in binary files (Windows core.autocrlf would
+# otherwise be allowed to change bytes in PDFs and images on checkout).
+*.pdf   binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.keras binary
+*.docx  binary
