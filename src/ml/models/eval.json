@@ -1,0 +1,259 @@
+{
+  "dataset": "PlantVillage (doi:10.17632/tywbtsjrjv.1), tomato + bell pepper classes",
+  "split": "per class, sorted file index % 10: 0-7 train, 8 validation, 9 test",
+  "train_images": 16518,
+  "val_images": 2059,
+  "test_images": 2058,
+  "test_accuracy": 0.93,
+  "nfr03_target": 0.85,
+  "share_of_test_images_above_0.70_confidence": 0.8941,
+  "accuracy_on_those_images": 0.9734,
+  "per_class": {
+    "Tomato___Bacterial_spot": {
+      "support": 212,
+      "precision": 0.942,
+      "recall": 0.925
+    },
+    "Tomato___Early_blight": {
+      "support": 100,
+      "precision": 0.798,
+      "recall": 0.75
+    },
+    "Tomato___Late_blight": {
+      "support": 190,
+      "precision": 0.967,
+      "recall": 0.926
+    },
+    "Tomato___Leaf_Mold": {
+      "support": 95,
+      "precision": 0.935,
+      "recall": 0.916
+    },
+    "Tomato___Septoria_leaf_spot": {
+      "support": 177,
+      "precision": 0.867,
+      "recall": 0.881
+    },
+    "Tomato___Spider_mites Two-spotted_spider_mite": {
+      "support": 167,
+      "precision": 0.878,
+      "recall": 0.904
+    },
+    "Tomato___Target_Spot": {
+      "support": 140,
+      "precision": 0.817,
+      "recall": 0.829
+    },
+    "Tomato___Tomato_Yellow_Leaf_Curl_Virus": {
+      "support": 535,
+      "precision": 0.973,
+      "recall": 0.993
+    },
+    "Tomato___Tomato_mosaic_virus": {
+      "support": 37,
+      "precision": 0.946,
+      "recall": 0.946
+    },
+    "Tomato___healthy": {
+      "support": 159,
+      "precision": 0.969,
+      "recall": 0.969
+    },
+    "Pepper,_bell___Bacterial_spot": {
+      "support": 99,
+      "precision": 0.95,
+      "recall": 0.96
+    },
+    "Pepper,_bell___healthy": {
+      "support": 147,
+      "precision": 0.979,
+      "recall": 0.966
+    }
+  },
+  "classes": [
+    "Tomato___Bacterial_spot",
+    "Tomato___Early_blight",
+    "Tomato___Late_blight",
+    "Tomato___Leaf_Mold",
+    "Tomato___Septoria_leaf_spot",
+    "Tomato___Spider_mites Two-spotted_spider_mite",
+    "Tomato___Target_Spot",
+    "Tomato___Tomato_Yellow_Leaf_Curl_Virus",
+    "Tomato___Tomato_mosaic_virus",
+    "Tomato___healthy",
+    "Pepper,_bell___Bacterial_spot",
+    "Pepper,_bell___healthy"
+  ],
+  "confusion_matrix": [
+    [
+      196,
+      2,
+      1,
+      0,
+      7,
+      1,
+      0,
+      4,
+      0,
+      0,
+      1,
+      0
+    ],
+    [
+      5,
+      75,
+      3,
+      2,
+      8,
+      0,
+      3,
+      4,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      8,
+      176,
+      1,
+      0,
+      2,
+      1,
+      0,
+      0,
+      1,
+      1,
+      0
+    ],
+    [
+      0,
+      3,
+      1,
+      87,
+      2,
+      2,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      4,
+      3,
+      1,
+      3,
+      156,
+      4,
+      5,
+      0,
+      1,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      151,
+      13,
+      2,
+      1,
+      0,
+      0,
+      0
+    ],
+    [
+      2,
+      2,
+      0,
+      0,
+      7,
+      9,
+      116,
+      1,
+      0,
+      3,
+      0,
+      0
+    ],
+    [
+      1,
+      1,
+      0,
+      0,
+      0,
+      1,
+      1,
+      531,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      2,
+      35,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      2,
+      3,
+      0,
+      0,
+      154,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      95,
+      3
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      1,
+      3,
+      142
+    ]
+  ],
+  "tensorflow": "2.21.0",
+  "minutes": 9.6
+}
