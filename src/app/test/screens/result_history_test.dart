@@ -19,7 +19,9 @@ void main() {
     expect(find.text('Severity'), findsOneWidget);
     expect(find.text('Spread risk'), findsOneWidget);
     expect(find.textContaining('Weather: 34 °C, humidity 78%'), findsOneWidget);
+    expect(find.textContaining('Next 24 h: up to 34 °C'), findsOneWidget); // FR-14 forecast
     expect(find.text('Original'), findsOneWidget); // overlay switch (FR-07)
+    await scrollTo(tester, find.text('Preventive'));
     for (final tab in ['Organic', 'Chemical', 'Preventive']) {
       expect(find.text(tab), findsOneWidget);
     }
@@ -39,7 +41,7 @@ void main() {
     expect(find.textContaining('Confidence:'), findsNothing);
   });
 
-  testWidgets('uncertain result: advice, retake and no severity', (tester) async {
+  testWidgets('uncertain result: overlay, advice, retake and no severity', (tester) async {
     final app = TestApp();
     await app.show(tester, ResultScreen(diagnosisId: app.backend.uncertainId));
     expect(find.text('Uncertain'), findsOneWidget);
@@ -47,6 +49,7 @@ void main() {
     expect(find.textContaining('ask an agronomist'), findsOneWidget);
     expect(find.text('Retake photo'), findsOneWidget);
     expect(find.text('Severity'), findsNothing);
+    expect(find.text('Overlay'), findsOneWidget); // FR-07: highlighted area on every diagnosis
     expect(app.backend.sent('GET', '/spread-risk'), isEmpty);
   });
 

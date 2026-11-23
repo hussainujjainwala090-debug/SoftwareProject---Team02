@@ -20,10 +20,17 @@ void main() {
     // FR-13 severity trend: weeks without confirmed diagnoses show "-".
     final trend = find.byKey(const Key('severityTrend'));
     expect(find.text('Severity trend (average affected leaf area)'), findsOneWidget);
-    expect(find.descendant(of: trend, matching: find.text('0.4%')), findsOneWidget);
-    expect(find.descendant(of: trend, matching: find.text('-')), findsNWidgets(3));
+    final weeks = d['scans_per_week'] as List;
+    for (final w in weeks) {
+      final pct = w['avg_affected_area_pct'] as num?;
+      final text = pct == null ? '-' : '${pct.toStringAsFixed(1)}%';
+      expect(find.descendant(of: trend, matching: find.text(text)), findsWidgets);
+    }
+    expect(find.descendant(of: trend, matching: find.text('-')),
+        findsNWidgets(weeks.where((w) => w['avg_affected_area_pct'] == null).length));
     expect(find.text('Tomato early blight'), findsOneWidget);
     expect(find.textContaining('Climate alert:'), findsOneWidget);
+    expect(find.textContaining('Next 24 h:'), findsOneWidget); // FR-14 forecast
   });
 
   testWidgets('admin knowledge base lists entries with Edit and Archive', (tester) async {

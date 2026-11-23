@@ -63,7 +63,8 @@ class Treatment {
 }
 
 class WeatherInfo {
-  WeatherInfo({required this.available, this.notice, this.temperature, this.humidity, this.rainfall});
+  WeatherInfo(
+      {required this.available, this.notice, this.temperature, this.humidity, this.rainfall, this.forecast});
 
   factory WeatherInfo.fromJson(Map<String, dynamic> j) => WeatherInfo(
         available: j['available'] as bool,
@@ -71,6 +72,7 @@ class WeatherInfo {
         temperature: _d(j['temperature']),
         humidity: _d(j['humidity']),
         rainfall: _d(j['rainfall']),
+        forecast: j['forecast'] == null ? null : ForecastInfo.fromJson(j['forecast'] as Map<String, dynamic>),
       );
 
   final bool available;
@@ -79,10 +81,28 @@ class WeatherInfo {
   final double? humidity;
   final double? rainfall;
 
+  /// FR-14: the next hours, when the weather service sent a forecast.
+  final ForecastInfo? forecast;
+
   String get summary => available
       ? '${temperature!.toStringAsFixed(0)} °C, humidity ${humidity!.toStringAsFixed(0)}%, '
           'rain ${rainfall!.toStringAsFixed(1)} mm'
       : 'Weather unavailable';
+}
+
+class ForecastInfo {
+  ForecastInfo(this.hours, this.maxTemperature, this.maxHumidity, this.totalRainfall);
+
+  factory ForecastInfo.fromJson(Map<String, dynamic> j) => ForecastInfo(
+      j['hours'] as int, _d(j['max_temperature'])!, _d(j['max_humidity'])!, _d(j['total_rainfall'])!);
+
+  final int hours;
+  final double maxTemperature;
+  final double maxHumidity;
+  final double totalRainfall;
+
+  String get summary => 'Next $hours h: up to ${maxTemperature.toStringAsFixed(0)} °C, '
+      'humidity up to ${maxHumidity.toStringAsFixed(0)}%, rain ${totalRainfall.toStringAsFixed(1)} mm';
 }
 
 class Diagnosis {

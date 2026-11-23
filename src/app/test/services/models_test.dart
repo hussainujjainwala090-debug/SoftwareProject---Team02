@@ -21,12 +21,12 @@ void main() {
     expect(d.weather!.available, isTrue);
   });
 
-  test('uncertain diagnosis has advice and no severity or overlay', () {
+  test('uncertain diagnosis has advice, an overlay (FR-07) and no severity', () {
     final d = Diagnosis.fromJson(fixture('diagnosis_uncertain') as Map<String, dynamic>);
     expect(d.isUncertain, isTrue);
     expect(d.label, 'Uncertain');
     expect(d.advice, contains('agronomist'));
-    expect(d.overlayUrl, isNull);
+    expect(d.overlayUrl, isNotNull); // FR-07: every diagnosis is highlighted
     expect(d.severityLevel, isNull);
   });
 
@@ -36,7 +36,11 @@ void main() {
     expect(Farm.fromJson(fixture('farm') as Map<String, dynamic>).crops, ['date_palm', 'tomato']);
     expect(AppUser.fromJson(fixture('me') as Map<String, dynamic>).role, 'farmer');
     expect(Report.fromJson(fixture('report') as Map<String, dynamic>).pdfUrl, endsWith('.pdf'));
-    expect(SpreadRiskInfo.fromJson(fixture('spread_risk') as Map<String, dynamic>).level, isNotNull);
+    final risk = SpreadRiskInfo.fromJson(fixture('spread_risk') as Map<String, dynamic>);
+    expect(risk.level, isNotNull);
+    // FR-14: the 24-hour forecast summary comes with the weather.
+    expect(risk.weather.forecast!.hours, 24);
+    expect(risk.weather.forecast!.summary, 'Next 24 h: up to 34 °C, humidity up to 83%, rain 0.0 mm');
   });
 
   test('dashboard, diseases, users and model accuracy', () {

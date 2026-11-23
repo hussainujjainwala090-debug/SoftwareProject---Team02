@@ -168,6 +168,7 @@ class _ResultScreenState extends State<ResultScreen> {
         Text(_risk?.explanation ?? d.spreadRiskExplanation ?? 'Spread risk unavailable.'),
         const SizedBox(height: 4),
         Text('Weather: ${weather?.summary ?? 'unavailable'}'),
+        if (weather?.forecast != null) Text(weather!.forecast!.summary),
         if (weather?.notice != null)
           Padding(
             padding: const EdgeInsets.only(top: 4),
