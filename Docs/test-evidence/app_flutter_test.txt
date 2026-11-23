@@ -1,58 +1,60 @@
 # AgriScan mobile app: static analysis and tests
-# Date: 2026-11-22T22:26Z  Branch: feature/app  Flutter 3.50.1 • channel stable • https://github.com/flutter/flutter.git
-# Commands (src/app): flutter analyze ; flutter test -r expanded
+# Date: 2026-11-23T08:40Z  Branch: feature/app  Flutter 3.50.1 • channel stable • https://github.com/flutter/flutter.git
+# Commands (src/app): flutter analyze ; flutter test -r expanded --concurrency=1
 
 ## flutter analyze
 Analyzing app...                                                
-No issues found! (ran in 19.1s)
+No issues found! (ran in 8.2s)
 
 ## flutter test
-00:00 +0: loading test/screens/capture_test.dart
 00:00 +0: test/screens/capture_test.dart: shows the farm crops, guide frame, gallery and capture buttons
-00:01 +1: test/screens/capture_test.dart: shows the farm crops, guide frame, gallery and capture buttons
-00:01 +2: test/screens/capture_test.dart: shows the farm crops, guide frame, gallery and capture buttons
-00:01 +3: test/screens/capture_test.dart: shows the farm crops, guide frame, gallery and capture buttons
-00:01 +4: test/screens/capture_test.dart: shows the farm crops, guide frame, gallery and capture buttons
-00:01 +5: test/screens/capture_test.dart: shows the farm crops, guide frame, gallery and capture buttons
-00:01 +6: test/screens/capture_test.dart: shows the farm crops, guide frame, gallery and capture buttons
-00:01 +7: test/screens/dashboard_admin_test.dart: dashboard shows totals, weekly scans, common diseases and climate alert
-00:01 +8: test/screens/dashboard_admin_test.dart: dashboard shows totals, weekly scans, common diseases and climate alert
-00:01 +9: test/screens/dashboard_admin_test.dart: dashboard shows totals, weekly scans, common diseases and climate alert
-00:01 +10: test/screens/dashboard_admin_test.dart: dashboard shows totals, weekly scans, common diseases and climate alert
-00:01 +11: test/screens/dashboard_admin_test.dart: dashboard shows totals, weekly scans, common diseases and climate alert
-00:02 +12: test/screens/login_and_profile_test.dart: login checks the fields before sending anything
-00:02 +13: test/screens/login_and_profile_test.dart: login checks the fields before sending anything
-00:02 +14: test/screens/login_and_profile_test.dart: login checks the fields before sending anything
-00:02 +15: test/screens/login_and_profile_test.dart: login checks the fields before sending anything
-00:02 +16: test/screens/login_and_profile_test.dart: login checks the fields before sending anything
-00:02 +17: test/screens/result_history_test.dart: confirmed result: disease, confidence, severity, spread risk, treatments
-00:02 +18: test/screens/result_history_test.dart: confirmed result: disease, confidence, severity, spread risk, treatments
-00:03 +19: test/screens/capture_test.dart: a blurry photo asks for a retake and is not uploaded
-00:03 +20: test/screens/capture_test.dart: a blurry photo asks for a retake and is not uploaded
-00:03 +21: test/screens/capture_test.dart: a blurry photo asks for a retake and is not uploaded
-00:03 +22: test/screens/capture_test.dart: a blurry photo asks for a retake and is not uploaded
-00:03 +23: test/screens/capture_test.dart: a blurry photo asks for a retake and is not uploaded
-00:04 +24: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
-00:04 +25: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
-00:04 +26: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
-00:04 +27: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
-00:04 +28: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
-00:04 +29: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
-00:04 +30: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
-00:04 +31: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
-00:04 +32: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
-00:04 +33: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
-00:04 +34: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
-00:04 +35: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
-00:04 +36: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
-00:05 +37: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
-00:05 +38: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
-00:05 +39: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
-00:05 +40: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
-00:05 +41: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
-00:06 +42: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
-00:06 +43: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
-00:06 +44: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
-00:08 +45: test/screens/capture_test.dart: offline: the scan is kept as pending and shown in the queue note
-00:09 +46: test/screens/capture_test.dart: a farmer without a farm is asked to create one first
-00:09 +47: All tests passed!
+00:00 +1: test/screens/capture_test.dart: a blurry photo asks for a retake and is not uploaded
+00:02 +2: test/screens/capture_test.dart: a good photo is uploaded and the result opens
+00:05 +3: test/screens/capture_test.dart: offline: the scan is kept as pending and shown in the queue note
+00:07 +4: test/screens/capture_test.dart: a farmer without a farm is asked to create one first
+00:07 +5: test/screens/dashboard_admin_test.dart: dashboard shows totals, weekly scans, common diseases and climate alert
+00:08 +6: test/screens/dashboard_admin_test.dart: admin knowledge base lists entries with Edit and Archive
+00:08 +7: test/screens/dashboard_admin_test.dart: add disease is validated before saving, then sent with treatments
+00:09 +8: test/screens/dashboard_admin_test.dart: users tab lists accounts with role and status; reports tab shows accuracy
+00:09 +9: test/screens/dashboard_admin_test.dart: admin creates an account after the form is validated (FR-18)
+00:10 +10: test/screens/dashboard_admin_test.dart: create account shows the backend error, e.g. duplicate email (FR-18)
+00:11 +11: test/screens/login_and_profile_test.dart: login checks the fields before sending anything
+00:12 +12: test/screens/login_and_profile_test.dart: register shows name and role; only farmer, farm owner, agronomist
+00:12 +13: test/screens/login_and_profile_test.dart: register creates the user with the chosen role and signs in
+00:12 +14: test/screens/login_and_profile_test.dart: pressing Enter in the password field logs in
+00:12 +15: test/screens/login_and_profile_test.dart: a signed-in but unregistered account is asked to finish registration
+00:13 +16: test/screens/login_and_profile_test.dart: farm profile validates name, coordinates and crops
+00:13 +17: test/screens/login_and_profile_test.dart: farm profile saves name, location and ticked crops
+00:13 +18: test/screens/login_and_profile_test.dart: tabs depend on the role
+00:14 +19: test/screens/result_history_test.dart: confirmed result: disease, confidence, severity, spread risk, treatments
+00:14 +20: test/screens/result_history_test.dart: a reviewed result says it was confirmed by an agronomist
+00:15 +21: test/screens/result_history_test.dart: uncertain result: advice, retake and no severity
+00:15 +22: test/screens/result_history_test.dart: feedback: "Yes" is sent once and then shown
+00:15 +23: test/screens/result_history_test.dart: feedback question is laid out on one line next to its buttons
+00:15 +24: test/screens/result_history_test.dart: agronomist confirms an uncertain result with the correct disease
+00:15 +25: test/screens/result_history_test.dart: export creates a PDF report and opens the report screen
+00:15 +26: test/screens/result_history_test.dart: history lists saved diagnoses and filters them
+00:16 +27: test/screens/result_history_test.dart: history filters by crop (FR-10)
+00:16 +28: test/services/api_client_test.dart: dev token is dev:<uid>:<email> with a uid the backend accepts
+00:17 +29: test/services/api_client_test.dart: every request carries the bearer token and query filters
+00:17 +30: test/services/api_client_test.dart: server refusals keep their message; validation errors get a plain one
+00:17 +31: test/services/api_client_test.dart: an unreachable server is a network error the queue retries later
+00:17 +32: test/services/api_client_test.dart: scan upload sends scan_id, capture time, crop and the photo
+00:17 +33: test/services/api_client_test.dart: form validators for the login screen
+00:17 +34: test/services/image_tools_test.dart: a sharp leaf photo passes
+00:17 +35: test/services/image_tools_test.dart: a blurred photo asks for a retake
+00:17 +36: test/services/image_tools_test.dart: a dark photo asks for better light
+00:17 +37: test/services/image_tools_test.dart: a non-image file is refused
+00:17 +38: test/services/image_tools_test.dart: NFR-02: a 10 MB camera photo is compressed to 1 MB or less and stays sharp
+00:20 +39: test/services/models_test.dart: confirmed diagnosis from the trained classifier
+00:20 +40: test/services/models_test.dart: uncertain diagnosis has advice and no severity or overlay
+00:20 +41: test/services/models_test.dart: history, farm, user, report, spread risk
+00:20 +42: test/services/models_test.dart: dashboard, diseases, users and model accuracy
+00:21 +43: test/services/scan_queue_test.dart: scan taken offline stays pending with its own id and capture time
+00:21 +44: test/services/scan_queue_test.dart: pending scans upload when the connection returns and leave the queue
+00:21 +45: test/services/scan_queue_test.dart: a scan the server refuses is marked failed with the server message
+00:21 +46: test/services/scan_queue_test.dart: server errors (5xx) and expired sign-in stay retryable
+00:21 +47: test/services/scan_queue_test.dart: a retry sends the same scan_id, so the backend cannot duplicate it
+00:21 +48: test/services/scan_queue_test.dart: uploads cut off by closing the app go back to pending on start-up
+00:21 +49: test/services/scan_queue_test.dart: the database refuses a second row with the same scan_id
+00:21 +50: All tests passed!
