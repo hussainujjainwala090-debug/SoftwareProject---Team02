@@ -1,5 +1,5 @@
 """TC-15 (PDF report), TC-13 (dashboard) and TC-11 (climate alerts)."""
-from app.adapters.weather import WeatherReading
+from app.adapters.weather import HourlyWeather, WeatherReading
 from app.ml import Prediction
 from conftest import register
 from test_scans import upload
@@ -65,3 +65,24 @@ def test_no_alert_in_dry_weather(client, farmer, farm, admin, container):
     container.weather.reading = WeatherReading(temperature=40, humidity=15, rainfall=0)
     results = client.post(f"{API}/admin/alerts/check", headers=admin).json()
     assert results[0]["sent"] is False and container.messenger.sent == []
+
+
+def rainy_night():
+    # Dry and hot now, but humid and rainy later today.
+    return WeatherReading(temperature=40, humidity=15, rainfall=0, forecast=(
+        HourlyWeather(38, 20, 0), HourlyWeather(24, 92, 6), HourlyWeather(22, 95, 3)))
+
+
+def test_farm_weather_includes_24_hour_forecast(client, farmer, farm, container):
+    container.weather.reading = rainy_night()
+    w = client.get(f"{API}/farms/{farm['farm_id']}/weather", headers=farmer).json()
+    assert w["forecast"] == {"hours": 3, "max_temperature": 38.0, "max_humidity": 95.0,
+                             "total_rainfall": 9.0}
+
+
+def test_alert_is_pushed_for_risky_forecast(client, farmer, farm, admin, container):
+    client.put(f"{API}/users/me/fcm-token", json={"fcm_token": "phone-1"}, headers=farmer)
+    container.weather.reading = rainy_night()
+    results = client.post(f"{API}/admin/alerts/check", headers=admin).json()
+    assert results[0]["spread_risk"] == "high" and results[0]["sent"] is True
+    assert results[0]["explanation"].startswith("In the next 24 hours:")
