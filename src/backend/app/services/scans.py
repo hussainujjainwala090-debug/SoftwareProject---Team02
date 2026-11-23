@@ -1,8 +1,9 @@
 """Scan service: the diagnosis workflow (FR-03 to FR-07, FR-10, FR-16; SD-1, SD-2).
 
-SD-1: check image quality -> classify -> if confidence is below the threshold,
-mark "Uncertain" (no segmentation) -> otherwise segment, rate severity, get the
-spread risk and store the diagnosis.
+SD-1: check image quality -> classify -> segment (every diagnosis gets the
+highlighted overlay, FR-07) -> if confidence is below the threshold, mark
+"Uncertain" -> otherwise rate severity, get the spread risk and store the
+diagnosis.
 
 Keys: diagnosis_id equals scan_id and feedback is stored under the diagnosis_id,
 so Firestore itself refuses a second Diagnosis per Scan or a second Feedback
@@ -21,7 +22,7 @@ from app.adapters.storage import Storage
 from app.clock import Clock, parse_iso, to_iso
 from app.config import Settings
 from app.errors import Conflict, Forbidden, Invalid, NotFound, TooLarge
-from app.ml import DiseaseClassifier, SeveritySegmenter
+from app.ml import DiseaseClassifier, SeverityResult, SeveritySegmenter
 from app.repository import (DIAGNOSES, FEEDBACK, SCANS, AlreadyExistsError, Repository,
                             new_id)
 from app.schemas import FeedbackIn, Role
@@ -122,12 +123,16 @@ class ScanService:
 
     def _diagnose(self, scan: dict, image: bytes, farm: dict) -> dict:
         pred = self.classifier.classify(image, scan["crop_type"])
+        # FR-07: every diagnosis gets the highlighted overlay, uncertain ones
+        # too, so the farmer and the agronomist can see what the system found.
+        seg = self.segmenter.segment(image)
         diagnosis = {
             "diagnosis_id": scan["scan_id"], "scan_id": scan["scan_id"], "disease_id": None,
             "weather_id": None, "reviewed_by": None,
             "confidence": round(min(max(pred.confidence, 0.0), 1.0), 4),
             "status": "uncertain", "affected_area_pct": None, "severity_level": None,
-            "overlay_url": None, "spread_risk": None,
+            "overlay_url": self.storage.upload("overlays", seg.overlay_png, "png", "image/png"),
+            "spread_risk": None,
         }
         if (pred.label is None or pred.confidence < self.settings.confidence_threshold
                 or (pred.crop and pred.crop != scan["crop_type"])):
@@ -137,17 +142,16 @@ class ScanService:
         disease = self.kb.find_active(pred.label, scan["crop_type"])
         if disease is None:  # label not (or no longer) in the knowledge base
             return diagnosis
-        return self._complete(diagnosis, disease, image, scan, farm)
+        return self._complete(diagnosis, disease, seg, scan, farm)
 
-    def _complete(self, diagnosis: dict, disease: dict, image: bytes, scan: dict, farm: dict) -> dict:
-        seg = self.segmenter.segment(image)
+    def _complete(self, diagnosis: dict, disease: dict, seg: SeverityResult, scan: dict,
+                  farm: dict) -> dict:
         level = self.severity_level(seg.affected_area_pct)
         weather = self.forecast.current_weather(farm["latitude"], farm["longitude"])
         risk, _ = self.forecast.risk(disease["name"], scan["crop_type"], level, weather)
         return {
             **diagnosis, "status": "confirmed", "disease_id": disease["disease_id"],
             "affected_area_pct": seg.affected_area_pct, "severity_level": level,
-            "overlay_url": self.storage.upload("overlays", seg.overlay_png, "png", "image/png"),
             "weather_id": weather.get("weather_id"), "spread_risk": risk,
         }
 
@@ -241,15 +245,15 @@ class ScanService:
         diagnosis, scan, farm = self.load(agronomist, diagnosis_id)
         if disease_id is None:
             diagnosis.update({"status": "confirmed", "disease_id": None, "affected_area_pct": 0.0,
-                              "severity_level": None, "overlay_url": None, "spread_risk": None})
+                              "severity_level": None, "spread_risk": None})
         else:
             disease = self.kb.get(disease_id)
             if disease["archived"]:
                 raise Invalid("This disease is archived")
             if disease["crop_type"] != scan["crop_type"]:
                 raise Invalid("This disease does not affect the scanned crop")
-            image = self.storage.download(scan["image_url"])
-            diagnosis = self._complete(diagnosis, disease, image, scan, farm)
+            seg = self.segmenter.segment(self.storage.download(scan["image_url"]))
+            diagnosis = self._complete(diagnosis, disease, seg, scan, farm)
         diagnosis["reviewed_by"] = agronomist["user_id"]
         self.repo.put(DIAGNOSES, diagnosis_id, diagnosis)
         return self.detail(agronomist, diagnosis_id)

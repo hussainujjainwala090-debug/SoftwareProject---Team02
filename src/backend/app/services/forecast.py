@@ -6,12 +6,18 @@ Weather rule:
   3. If the service fails, the newest record no older than weather_cache_max_hours
      (6 h) is used with a notice.
   4. If there is none, weather and spread risk are shown as unavailable.
+
+Forecast (FR-14): the next 24 hours come with each fetch. WeatherRecords has no
+forecast columns (DB-1), so the forecast is kept in memory next to its record:
+it is shown while that record is used and is gone after a restart. Climate
+alerts (FR-11) use the worst hour of the forecast as well as the current
+weather.
 """
 import logging
 from datetime import timedelta
 
 from app.adapters.messaging import Messenger
-from app.adapters.weather import WeatherClient, WeatherUnavailableError
+from app.adapters.weather import HourlyWeather, WeatherClient, WeatherUnavailableError
 from app.clock import Clock, parse_iso, to_iso
 from app.config import Settings
 from app.ml import SpreadRiskModel
@@ -37,11 +43,18 @@ class ForecastService:
         self.farms = farms
         self.clock = clock
         self.settings = settings
+        self._forecasts: dict[str, tuple[HourlyWeather, ...]] = {}  # weather_id -> hours
 
     # ------------------------------------------------------------ weather ----
-    @staticmethod
-    def _out(record: dict, notice: str | None = None) -> dict:
-        return {"available": True, "notice": notice, **{k: record[k] for k in (
+    def _out(self, record: dict, notice: str | None = None) -> dict:
+        hours = self._forecasts.get(record["weather_id"])
+        forecast = {
+            "hours": len(hours),
+            "max_temperature": max(h.temperature for h in hours),
+            "max_humidity": max(h.humidity for h in hours),
+            "total_rainfall": round(sum(h.rainfall for h in hours), 1),
+        } if hours else None
+        return {"available": True, "notice": notice, "forecast": forecast, **{k: record[k] for k in (
             "weather_id", "temperature", "humidity", "rainfall", "fetched_at")}}
 
     def current_weather(self, latitude: float, longitude: float) -> dict:
@@ -71,6 +84,8 @@ class ForecastService:
             "rainfall": reading.rainfall, "fetched_at": to_iso(now),
         }
         self.repo.create(WEATHER_RECORDS, record["weather_id"], record)
+        if reading.forecast:
+            self._forecasts[record["weather_id"]] = reading.forecast
         return self._out(record)
 
     def weather_by_id(self, weather_id: str | None) -> dict | None:
@@ -87,14 +102,21 @@ class ForecastService:
         return r.level, r.explanation
 
     def farm_risk(self, farm: dict) -> dict:
-        """Current spread risk for the farm's crops (dashboard alert card, FR-11)."""
+        """Spread risk for the farm's crops now and in the next 24 hours
+        (dashboard alert card and push alerts, FR-11)."""
         weather = self.current_weather(farm["latitude"], farm["longitude"])
+        hours = self._forecasts.get(weather.get("weather_id") or "", ())
         best: tuple[str | None, str] = (None, "No crops registered for this farm.")
         for crop in self.farms.crops_of(farm["farm_id"]):
             level, text = self.risk(None, crop, None, weather)
             if level is None:
                 best = (None, text)
                 break
+            for hour in hours:
+                r = self.risk_model.predict(None, crop, None, hour.temperature, hour.humidity,
+                                            hour.rainfall)
+                if LEVEL_RANK[r.level] > LEVEL_RANK[level]:
+                    level, text = r.level, f"In the next 24 hours: {r.explanation}"
             if best[0] is None or LEVEL_RANK[level] > LEVEL_RANK[best[0]]:
                 best = (level, text)
         return {"spread_risk": best[0], "explanation": best[1], "weather": weather}

@@ -1,0 +1,4 @@
+# For hosts that install from the repository root, such as Heroku (see README,
+# "Deploying to Heroku"). For local development use src/backend/requirements.txt.
+-r src/backend/requirements-runtime.txt
+./src/ml
