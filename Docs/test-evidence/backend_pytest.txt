@@ -1,14 +1,15 @@
 # AgriScan backend + ML test run
-# Date: 2026-11-22T20:47Z  Branch: feature/backend  Python: Python 3.13.14, with TensorFlow 2.21
+# Date: 2026-11-23T08:55Z  Branch: feature/app (includes feature/backend)  Python: Python 3.13.14, with TensorFlow 2.21.0
 # Command (repo root): python -m pytest -v --cov=app --cov=agriscan_ml --cov-report=term-missing
 
 ============================= test session starts =============================
 platform win32 -- Python 3.13.14, pytest-9.2.0, pluggy-1.7.0 -- C:\Users\User\agriscan-ml-venv\Scripts\python.exe
+cachedir: .pytest_cache
 rootdir: C:\Users\User\Downloads\AgriScan_Diagrams\SoftwareProject---Team02
 configfile: pytest.ini
 testpaths: src/tests
 plugins: anyio-4.16.0, cov-7.1.0
-collecting ... collected 151 items
+collecting ... collected 155 items
 
 src/tests/backend/test_auth_users.py::test_requests_without_token_are_rejected PASSED [  0%]
 src/tests/backend/test_auth_users.py::test_invalid_token_is_rejected PASSED [  1%]
@@ -26,71 +27,73 @@ src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_ad
 src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[farmer-patch-/admin/users/someid/role-body2] PASSED [  9%]
 src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[farmer-post-/admin/users/someid/disable-None] PASSED [  9%]
 src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[farmer-post-/admin/users/someid/enable-None] PASSED [ 10%]
-src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[farmer-delete-/admin/users/someid-None] PASSED [ 11%]
+src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[farmer-delete-/admin/users/someid-None] PASSED [ 10%]
 src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[farmer-get-/admin/model-accuracy-None] PASSED [ 11%]
 src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[farmer-post-/admin/diseases-body7] PASSED [ 12%]
-src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[farmer-put-/admin/diseases/someid-body8] PASSED [ 13%]
+src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[farmer-put-/admin/diseases/someid-body8] PASSED [ 12%]
 src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[farmer-post-/admin/diseases/someid/archive-None] PASSED [ 13%]
 src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[farmer-post-/admin/diseases/someid/restore-None] PASSED [ 14%]
-src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[farmer-post-/admin/alerts/check-None] PASSED [ 15%]
+src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[farmer-post-/admin/alerts/check-None] PASSED [ 14%]
 src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[farm_owner-get-/admin/users-None] PASSED [ 15%]
 src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[farm_owner-post-/admin/users-body1] PASSED [ 16%]
-src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[farm_owner-patch-/admin/users/someid/role-body2] PASSED [ 17%]
+src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[farm_owner-patch-/admin/users/someid/role-body2] PASSED [ 16%]
 src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[farm_owner-post-/admin/users/someid/disable-None] PASSED [ 17%]
 src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[farm_owner-post-/admin/users/someid/enable-None] PASSED [ 18%]
-src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[farm_owner-delete-/admin/users/someid-None] PASSED [ 19%]
+src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[farm_owner-delete-/admin/users/someid-None] PASSED [ 18%]
 src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[farm_owner-get-/admin/model-accuracy-None] PASSED [ 19%]
 src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[farm_owner-post-/admin/diseases-body7] PASSED [ 20%]
-src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[farm_owner-put-/admin/diseases/someid-body8] PASSED [ 21%]
+src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[farm_owner-put-/admin/diseases/someid-body8] PASSED [ 20%]
 src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[farm_owner-post-/admin/diseases/someid/archive-None] PASSED [ 21%]
-src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[farm_owner-post-/admin/diseases/someid/restore-None] PASSED [ 22%]
-src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[farm_owner-post-/admin/alerts/check-None] PASSED [ 23%]
+src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[farm_owner-post-/admin/diseases/someid/restore-None] PASSED [ 21%]
+src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[farm_owner-post-/admin/alerts/check-None] PASSED [ 22%]
 src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[agronomist-get-/admin/users-None] PASSED [ 23%]
-src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[agronomist-post-/admin/users-body1] PASSED [ 24%]
-src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[agronomist-patch-/admin/users/someid/role-body2] PASSED [ 25%]
+src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[agronomist-post-/admin/users-body1] PASSED [ 23%]
+src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[agronomist-patch-/admin/users/someid/role-body2] PASSED [ 24%]
 src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[agronomist-post-/admin/users/someid/disable-None] PASSED [ 25%]
-src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[agronomist-post-/admin/users/someid/enable-None] PASSED [ 26%]
-src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[agronomist-delete-/admin/users/someid-None] PASSED [ 27%]
+src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[agronomist-post-/admin/users/someid/enable-None] PASSED [ 25%]
+src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[agronomist-delete-/admin/users/someid-None] PASSED [ 26%]
 src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[agronomist-get-/admin/model-accuracy-None] PASSED [ 27%]
-src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[agronomist-post-/admin/diseases-body7] PASSED [ 28%]
-src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[agronomist-put-/admin/diseases/someid-body8] PASSED [ 29%]
+src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[agronomist-post-/admin/diseases-body7] PASSED [ 27%]
+src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[agronomist-put-/admin/diseases/someid-body8] PASSED [ 28%]
 src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[agronomist-post-/admin/diseases/someid/archive-None] PASSED [ 29%]
-src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[agronomist-post-/admin/diseases/someid/restore-None] PASSED [ 30%]
-src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[agronomist-post-/admin/alerts/check-None] PASSED [ 31%]
-src/tests/backend/test_auth_users.py::test_admin_disable_enable_change_role_and_remove PASSED [ 31%]
-src/tests/backend/test_auth_users.py::test_admin_creates_account PASSED  [ 32%]
-src/tests/backend/test_auth_users.py::test_admin_cannot_lock_themselves_out PASSED [ 33%]
-src/tests/backend/test_farms.py::test_create_and_list_farm PASSED        [ 33%]
-src/tests/backend/test_farms.py::test_invalid_farm_is_rejected[change0] PASSED [ 34%]
-src/tests/backend/test_farms.py::test_invalid_farm_is_rejected[change1] PASSED [ 35%]
-src/tests/backend/test_farms.py::test_invalid_farm_is_rejected[change2] PASSED [ 35%]
-src/tests/backend/test_farms.py::test_invalid_farm_is_rejected[change3] PASSED [ 36%]
-src/tests/backend/test_farms.py::test_invalid_farm_is_rejected[change4] PASSED [ 37%]
-src/tests/backend/test_farms.py::test_invalid_farm_is_rejected[change5] PASSED [ 37%]
-src/tests/backend/test_farms.py::test_update_changes_crops PASSED        [ 38%]
-src/tests/backend/test_farms.py::test_other_farmers_cannot_see_or_edit PASSED [ 39%]
-src/tests/backend/test_farms.py::test_agronomist_can_view_but_not_create_or_edit PASSED [ 39%]
-src/tests/backend/test_farms.py::test_unknown_farm_is_404 PASSED         [ 40%]
-src/tests/backend/test_image_quality.py::test_sharp_photo_passes PASSED  [ 41%]
-src/tests/backend/test_image_quality.py::test_blurry_photo_is_rejected_with_retake_message PASSED [ 41%]
-src/tests/backend/test_image_quality.py::test_dark_photo_is_rejected PASSED [ 42%]
-src/tests/backend/test_image_quality.py::test_non_image_is_rejected PASSED [ 43%]
-src/tests/backend/test_knowledge_base.py::test_seeded_entries_are_listed_with_treatments PASSED [ 43%]
-src/tests/backend/test_knowledge_base.py::test_admin_adds_edits_archives_and_restores PASSED [ 44%]
-src/tests/backend/test_knowledge_base.py::test_there_is_no_delete_endpoint PASSED [ 45%]
-src/tests/backend/test_knowledge_base.py::test_duplicate_name_is_rejected PASSED [ 45%]
-src/tests/backend/test_knowledge_base.py::test_invalid_entries_are_not_saved[change0] PASSED [ 46%]
-src/tests/backend/test_knowledge_base.py::test_invalid_entries_are_not_saved[change1] PASSED [ 47%]
-src/tests/backend/test_knowledge_base.py::test_invalid_entries_are_not_saved[change2] PASSED [ 47%]
-src/tests/backend/test_knowledge_base.py::test_invalid_entries_are_not_saved[change3] PASSED [ 48%]
-src/tests/backend/test_knowledge_base.py::test_search_by_name PASSED     [ 49%]
-src/tests/backend/test_reports_dashboard.py::test_pdf_report_is_generated_stored_and_shareable PASSED [ 49%]
-src/tests/backend/test_reports_dashboard.py::test_report_for_uncertain_diagnosis PASSED [ 50%]
-src/tests/backend/test_reports_dashboard.py::test_report_text_contains_ui7_sections PASSED [ 50%]
-src/tests/backend/test_reports_dashboard.py::test_other_users_cannot_create_reports PASSED [ 51%]
-src/tests/backend/test_reports_dashboard.py::test_dashboard_counts PASSED [ 52%]
-src/tests/backend/test_reports_dashboard.py::test_climate_alert_is_pushed_when_risk_is_high PASSED [ 52%]
-src/tests/backend/test_reports_dashboard.py::test_no_alert_in_dry_weather PASSED [ 53%]
+src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[agronomist-post-/admin/diseases/someid/restore-None] PASSED [ 29%]
+src/tests/backend/test_auth_users.py::test_non_admins_are_rejected_from_every_admin_endpoint[agronomist-post-/admin/alerts/check-None] PASSED [ 30%]
+src/tests/backend/test_auth_users.py::test_admin_disable_enable_change_role_and_remove PASSED [ 30%]
+src/tests/backend/test_auth_users.py::test_admin_creates_account PASSED  [ 31%]
+src/tests/backend/test_auth_users.py::test_admin_cannot_lock_themselves_out PASSED [ 32%]
+src/tests/backend/test_farms.py::test_create_and_list_farm PASSED        [ 32%]
+src/tests/backend/test_farms.py::test_invalid_farm_is_rejected[change0] PASSED [ 33%]
+src/tests/backend/test_farms.py::test_invalid_farm_is_rejected[change1] PASSED [ 34%]
+src/tests/backend/test_farms.py::test_invalid_farm_is_rejected[change2] PASSED [ 34%]
+src/tests/backend/test_farms.py::test_invalid_farm_is_rejected[change3] PASSED [ 35%]
+src/tests/backend/test_farms.py::test_invalid_farm_is_rejected[change4] PASSED [ 36%]
+src/tests/backend/test_farms.py::test_invalid_farm_is_rejected[change5] PASSED [ 36%]
+src/tests/backend/test_farms.py::test_update_changes_crops PASSED        [ 37%]
+src/tests/backend/test_farms.py::test_other_farmers_cannot_see_or_edit PASSED [ 38%]
+src/tests/backend/test_farms.py::test_agronomist_can_view_but_not_create_or_edit PASSED [ 38%]
+src/tests/backend/test_farms.py::test_unknown_farm_is_404 PASSED         [ 39%]
+src/tests/backend/test_image_quality.py::test_sharp_photo_passes PASSED  [ 40%]
+src/tests/backend/test_image_quality.py::test_blurry_photo_is_rejected_with_retake_message PASSED [ 40%]
+src/tests/backend/test_image_quality.py::test_dark_photo_is_rejected PASSED [ 41%]
+src/tests/backend/test_image_quality.py::test_non_image_is_rejected PASSED [ 41%]
+src/tests/backend/test_knowledge_base.py::test_seeded_entries_are_listed_with_treatments PASSED [ 42%]
+src/tests/backend/test_knowledge_base.py::test_admin_adds_edits_archives_and_restores PASSED [ 43%]
+src/tests/backend/test_knowledge_base.py::test_there_is_no_delete_endpoint PASSED [ 43%]
+src/tests/backend/test_knowledge_base.py::test_duplicate_name_is_rejected PASSED [ 44%]
+src/tests/backend/test_knowledge_base.py::test_invalid_entries_are_not_saved[change0] PASSED [ 45%]
+src/tests/backend/test_knowledge_base.py::test_invalid_entries_are_not_saved[change1] PASSED [ 45%]
+src/tests/backend/test_knowledge_base.py::test_invalid_entries_are_not_saved[change2] PASSED [ 46%]
+src/tests/backend/test_knowledge_base.py::test_invalid_entries_are_not_saved[change3] PASSED [ 47%]
+src/tests/backend/test_knowledge_base.py::test_search_by_name PASSED     [ 47%]
+src/tests/backend/test_reports_dashboard.py::test_pdf_report_is_generated_stored_and_shareable PASSED [ 48%]
+src/tests/backend/test_reports_dashboard.py::test_report_for_uncertain_diagnosis PASSED [ 49%]
+src/tests/backend/test_reports_dashboard.py::test_report_text_contains_ui7_sections PASSED [ 49%]
+src/tests/backend/test_reports_dashboard.py::test_other_users_cannot_create_reports PASSED [ 50%]
+src/tests/backend/test_reports_dashboard.py::test_dashboard_counts PASSED [ 50%]
+src/tests/backend/test_reports_dashboard.py::test_climate_alert_is_pushed_when_risk_is_high PASSED [ 51%]
+src/tests/backend/test_reports_dashboard.py::test_no_alert_in_dry_weather PASSED [ 52%]
+src/tests/backend/test_reports_dashboard.py::test_farm_weather_includes_24_hour_forecast PASSED [ 52%]
+src/tests/backend/test_reports_dashboard.py::test_alert_is_pushed_for_risky_forecast PASSED [ 53%]
 src/tests/backend/test_repository.py::test_create_refuses_duplicate_ids PASSED [ 54%]
 src/tests/backend/test_repository.py::test_find_filters_on_every_field_and_returns_copies PASSED [ 54%]
 src/tests/backend/test_repository.py::test_update_missing_document_raises PASSED [ 55%]
@@ -103,47 +106,49 @@ src/tests/backend/test_review_feedback.py::test_only_the_farmer_can_give_feedbac
 src/tests/backend/test_review_feedback.py::test_model_accuracy_from_feedback PASSED [ 60%]
 src/tests/backend/test_review_feedback.py::test_model_accuracy_with_no_feedback PASSED [ 60%]
 src/tests/backend/test_review_feedback.py::test_review_of_unknown_diagnosis_is_404 PASSED [ 61%]
-src/tests/backend/test_review_feedback.py::test_disabled_agronomist_cannot_review PASSED [ 62%]
+src/tests/backend/test_review_feedback.py::test_disabled_agronomist_cannot_review PASSED [ 61%]
 src/tests/backend/test_scans.py::test_confident_scan_gives_full_diagnosis PASSED [ 62%]
 src/tests/backend/test_scans.py::test_stored_images_can_be_opened PASSED [ 63%]
-src/tests/backend/test_scans.py::test_low_confidence_is_uncertain_without_segmentation PASSED [ 64%]
+src/tests/backend/test_scans.py::test_low_confidence_is_uncertain_but_still_highlighted PASSED [ 63%]
 src/tests/backend/test_scans.py::test_threshold_boundary_counts_as_confident PASSED [ 64%]
 src/tests/backend/test_scans.py::test_unusable_predictions_are_uncertain[prediction0] PASSED [ 65%]
-src/tests/backend/test_scans.py::test_unusable_predictions_are_uncertain[prediction1] PASSED [ 66%]
+src/tests/backend/test_scans.py::test_unusable_predictions_are_uncertain[prediction1] PASSED [ 65%]
 src/tests/backend/test_scans.py::test_unusable_predictions_are_uncertain[prediction2] PASSED [ 66%]
 src/tests/backend/test_scans.py::test_healthy_leaf PASSED                [ 67%]
-src/tests/backend/test_scans.py::test_blurry_photo_asks_for_retake PASSED [ 68%]
+src/tests/backend/test_scans.py::test_blurry_photo_asks_for_retake PASSED [ 67%]
 src/tests/backend/test_scans.py::test_image_over_1mb_is_rejected PASSED  [ 68%]
 src/tests/backend/test_scans.py::test_crop_must_belong_to_farm PASSED    [ 69%]
-src/tests/backend/test_scans.py::test_only_farm_owner_can_scan PASSED    [ 70%]
+src/tests/backend/test_scans.py::test_only_farm_owner_can_scan PASSED    [ 69%]
 src/tests/backend/test_scans.py::test_offline_reupload_with_same_scan_id_is_not_duplicated PASSED [ 70%]
-src/tests/backend/test_scans.py::test_retry_after_failed_diagnosis_completes_it PASSED [ 71%]
-src/tests/backend/test_scans.py::test_scan_id_of_another_user_is_a_conflict PASSED [ 72%]
+src/tests/backend/test_scans.py::test_retry_after_failed_diagnosis_completes_it PASSED [ 70%]
+src/tests/backend/test_scans.py::test_scan_id_of_another_user_is_a_conflict PASSED [ 71%]
 src/tests/backend/test_scans.py::test_bad_scan_metadata_is_rejected[form0] PASSED [ 72%]
-src/tests/backend/test_scans.py::test_bad_scan_metadata_is_rejected[form1] PASSED [ 73%]
-src/tests/backend/test_scans.py::test_bad_scan_metadata_is_rejected[form2] PASSED [ 74%]
+src/tests/backend/test_scans.py::test_bad_scan_metadata_is_rejected[form1] PASSED [ 72%]
+src/tests/backend/test_scans.py::test_bad_scan_metadata_is_rejected[form2] PASSED [ 73%]
 src/tests/backend/test_scans.py::test_history_lists_and_filters PASSED   [ 74%]
-src/tests/backend/test_scans.py::test_other_farmers_cannot_open_a_diagnosis PASSED [ 75%]
-src/tests/backend/test_scans.py::test_agronomist_sees_all_diagnoses PASSED [ 76%]
+src/tests/backend/test_scans.py::test_other_farmers_cannot_open_a_diagnosis PASSED [ 74%]
+src/tests/backend/test_scans.py::test_agronomist_sees_all_diagnoses PASSED [ 75%]
 src/tests/backend/test_scans.py::test_archived_disease_is_not_used_for_new_scans_but_history_keeps_it PASSED [ 76%]
-src/tests/backend/test_weather_client.py::test_parses_current_weather PASSED [ 77%]
-src/tests/backend/test_weather_client.py::test_errors_become_weather_unavailable[kwargs0] PASSED [ 78%]
+src/tests/backend/test_weather_client.py::test_parses_current_weather PASSED [ 76%]
+src/tests/backend/test_weather_client.py::test_errors_become_weather_unavailable[kwargs0] PASSED [ 77%]
 src/tests/backend/test_weather_client.py::test_errors_become_weather_unavailable[kwargs1] PASSED [ 78%]
-src/tests/backend/test_weather_client.py::test_errors_become_weather_unavailable[kwargs2] PASSED [ 79%]
+src/tests/backend/test_weather_client.py::test_errors_become_weather_unavailable[kwargs2] PASSED [ 78%]
+src/tests/backend/test_weather_client.py::test_parses_24_hour_forecast PASSED [ 79%]
+src/tests/backend/test_weather_client.py::test_broken_forecast_keeps_current_weather PASSED [ 80%]
 src/tests/backend/test_weather_forecast.py::test_live_weather_is_fetched_and_stored PASSED [ 80%]
-src/tests/backend/test_weather_forecast.py::test_recent_record_is_reused PASSED [ 80%]
+src/tests/backend/test_weather_forecast.py::test_recent_record_is_reused PASSED [ 81%]
 src/tests/backend/test_weather_forecast.py::test_outage_uses_cache_up_to_6_hours_with_notice PASSED [ 81%]
 src/tests/backend/test_weather_forecast.py::test_outage_with_stale_cache_shows_unavailable PASSED [ 82%]
-src/tests/backend/test_weather_forecast.py::test_scan_during_outage_without_cache_has_no_spread_risk PASSED [ 82%]
+src/tests/backend/test_weather_forecast.py::test_scan_during_outage_without_cache_has_no_spread_risk PASSED [ 83%]
 src/tests/backend/test_weather_forecast.py::test_spread_risk_endpoint_recalculates_with_new_weather PASSED [ 83%]
 src/tests/backend/test_weather_forecast.py::test_spread_risk_unavailable_message PASSED [ 84%]
-src/tests/ml/test_classifier.py::test_every_disease_label_exists_in_the_knowledge_base_seed PASSED [ 84%]
+src/tests/ml/test_classifier.py::test_every_disease_label_exists_in_the_knowledge_base_seed PASSED [ 85%]
 src/tests/ml/test_classifier.py::test_wrapper_returns_label_crop_and_confidence PASSED [ 85%]
 src/tests/ml/test_prepare_data.py::test_extracts_only_tomato_and_pepper_classes PASSED [ 86%]
-src/tests/ml/test_prepare_data.py::test_refuses_path_traversal PASSED    [ 86%]
+src/tests/ml/test_prepare_data.py::test_refuses_path_traversal PASSED    [ 87%]
 src/tests/ml/test_severity.py::test_affected_area_matches_known_lesion_area[PNG-15] PASSED [ 87%]
 src/tests/ml/test_severity.py::test_affected_area_matches_known_lesion_area[PNG-25] PASSED [ 88%]
-src/tests/ml/test_severity.py::test_affected_area_matches_known_lesion_area[PNG-35] PASSED [ 88%]
+src/tests/ml/test_severity.py::test_affected_area_matches_known_lesion_area[PNG-35] PASSED [ 89%]
 src/tests/ml/test_severity.py::test_affected_area_matches_known_lesion_area[JPEG-15] PASSED [ 89%]
 src/tests/ml/test_severity.py::test_affected_area_matches_known_lesion_area[JPEG-25] PASSED [ 90%]
 src/tests/ml/test_severity.py::test_affected_area_matches_known_lesion_area[JPEG-35] PASSED [ 90%]
@@ -171,8 +176,8 @@ src\backend\app\__init__.py                      0      0   100%
 src\backend\app\adapters\__init__.py             0      0   100%
 src\backend\app\adapters\auth.py                72     26    64%   82, 85-94, 100, 103-105, 108-112, 115-120, 123-128
 src\backend\app\adapters\messaging.py           14      4    71%   21, 24-31
-src\backend\app\adapters\storage.py             50     13    74%   45, 52, 63-66, 69-71, 74, 77, 80-82
-src\backend\app\adapters\weather.py             34      0   100%
+src\backend\app\adapters\storage.py             50     14    72%   45, 52, 57, 63-66, 69-71, 74, 77, 80-82
+src\backend\app\adapters\weather.py             48      0   100%
 src\backend\app\api\__init__.py                  0      0   100%
 src\backend\app\api\alerts.py                    8      0   100%
 src\backend\app\api\farms.py                    24      0   100%
@@ -187,16 +192,16 @@ src\backend\app\image_quality.py                33      1    97%   40
 src\backend\app\main.py                         58     13    78%   26-33, 47, 50-52, 65, 76
 src\backend\app\ml.py                           47      8    83%   56, 76-82
 src\backend\app\repository.py                   83     20    76%   108, 111-112, 115-121, 124-125, 128-130, 133, 136-141
-src\backend\app\schemas.py                     153      0   100%
+src\backend\app\schemas.py                     159      0   100%
 src\backend\app\security.py                     32      0   100%
 src\backend\app\seed_data.py                    12      0   100%
 src\backend\app\services\__init__.py             0      0   100%
 src\backend\app\services\dashboard.py           48      1    98%   34
 src\backend\app\services\farms.py               48      0   100%
-src\backend\app\services\forecast.py            78      4    95%   96-97, 118-119
+src\backend\app\services\forecast.py            87      4    95%   113-114, 140-141
 src\backend\app\services\knowledge_base.py      62      1    98%   30
-src\backend\app\services\reports.py             79      3    96%   43-45
-src\backend\app\services\scans.py              183      9    95%   56, 59, 73, 81, 102-103, 111, 207, 228
+src\backend\app\services\reports.py             79      4    95%   40, 43-45
+src\backend\app\services\scans.py              183      9    95%   57, 60, 74, 82, 103-104, 112, 211, 232
 src\backend\app\services\users.py               66      3    95%   29, 53, 77
 src\ml\agriscan_ml\__init__.py                   0      0   100%
 src\ml\agriscan_ml\classifier.py                27      0   100%
@@ -207,5 +212,5 @@ src\ml\agriscan_ml\severity.py                  81      0   100%
 src\ml\agriscan_ml\spread_risk.py               38      0   100%
 src\ml\agriscan_ml\train.py                     72     72     0%   16-141
 --------------------------------------------------------------------------
-TOTAL                                         1682    229    86%
-============================ 151 passed in 12.62s =============================
+TOTAL                                         1711    231    86%
+============================ 155 passed in 32.21s =============================
