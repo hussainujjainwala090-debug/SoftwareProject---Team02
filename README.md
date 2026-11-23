@@ -45,7 +45,7 @@ src/
     firebase/       Firestore and Storage security rules, emulator config
     scripts/        smoke_test.py (end-to-end check of a running server)
   ml/agriscan_ml/   classifier (train, evaluate, wrapper), severity segmentation, spread risk
-  ml/models/        trained model files (git-ignored; created by training)
+  ml/models/        trained model (classifier.keras, labels.json, eval.json)
   tests/            pytest: backend/ and ml/
   app/              Flutter app (presentation tier)
     lib/screens/    the 8 screens (UI-1 to UI-8) and the bottom navigation
@@ -116,7 +116,7 @@ Main endpoints (all under `/api/v1`):
 | Monitoring and alerts (FR-11, FR-18) | `GET /admin/model-accuracy`, `POST /admin/alerts/check` |
 
 ## Disease classifier (ML)
-Without a trained model the backend still runs, but every scan is "Uncertain". To train and use the model:
+The trained model is included in `src/ml/models/` (`classifier.keras`, `labels.json`, `eval.json`), so you only need step 1 to use it. Steps 2 and 3 are only for retraining. Without TensorFlow or the model files the backend still runs, but every scan is "Uncertain".
 
 **1. Make an ML environment at a short path.** TensorFlow's files are too deep for Windows' 260-character path limit if the environment sits inside the project folder (unless long paths are enabled in Windows).
 ```powershell
@@ -138,7 +138,7 @@ python -m agriscan_ml.prepare_data <path-to-zip> C:\Users\<you>\agriscan-data\pv
 python -m agriscan_ml.train --image-dir C:\Users\<you>\agriscan-data\pv
 python -m agriscan_ml.evaluate --image-dir C:\Users\<you>\agriscan-data\pv
 ```
-This writes `src/ml/models/classifier.keras`, `labels.json` and `eval.json`. The backend loads them automatically at start-up (paths in `AGRISCAN_CLASSIFIER_MODEL_PATH` and `AGRISCAN_CLASSIFIER_LABELS_PATH`) when it runs in the ML environment.
+Training overwrites `src/ml/models/classifier.keras`, `labels.json` and `eval.json`. The backend loads them automatically at start-up (paths in `AGRISCAN_CLASSIFIER_MODEL_PATH` and `AGRISCAN_CLASSIFIER_LABELS_PATH`) when it runs in the ML environment.
 
 Method: transfer learning with MobileNetV2 (ImageNet weights, frozen) and a softmax layer trained on its features; within each class the photos are split 80/10/10 into train, validation and test by file order, the same every run. Crops the model was not trained on (date palm, cucumber) and predictions for a different crop than the one selected are shown as "Uncertain".
 
