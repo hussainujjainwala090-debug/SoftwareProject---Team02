@@ -35,11 +35,13 @@ def test_stored_images_can_be_opened(client, farmer, farm):
         assert client.get(url.removeprefix("http://testserver")).status_code == 200
 
 
-def test_low_confidence_is_uncertain_without_segmentation(client, farmer, farm, container):
+def test_low_confidence_is_uncertain_but_still_highlighted(client, farmer, farm, container):
     container.classifier.prediction = Prediction("Tomato early blight", "tomato", 0.55)
     d = upload(client, farmer, farm).json()
     assert d["status"] == "uncertain" and d["label"] == "Uncertain"
-    assert d["disease_id"] is None and d["overlay_url"] is None and d["severity_level"] is None
+    assert d["disease_id"] is None and d["severity_level"] is None and d["affected_area_pct"] is None
+    # FR-07: the highlighted overlay is shown for every diagnosis, uncertain ones too.
+    assert d["overlay_url"].startswith("http://testserver/files/overlays/")
     assert "agronomist" in d["advice"] and "Retake" in d["advice"]
 
 
@@ -62,6 +64,7 @@ def test_healthy_leaf(client, farmer, farm, container):
     container.classifier.prediction = Prediction("healthy", "tomato", 0.97)
     d = upload(client, farmer, farm, image=leaf_jpeg(lesion_radius=0)).json()
     assert d["status"] == "confirmed" and d["label"] == "Healthy" and d["affected_area_pct"] == 0.0
+    assert d["overlay_url"]  # FR-07: every diagnosis has an overlay
 
 
 def test_blurry_photo_asks_for_retake(client, farmer, farm):
