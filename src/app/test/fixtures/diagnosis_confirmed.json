@@ -1,52 +1,58 @@
 {
-  "diagnosis_id": "d732df21e2934bacb4f568dae8d927a4",
-  "scan_id": "d732df21e2934bacb4f568dae8d927a4",
-  "farm_id": "1bc4cf51c2b94236a682be1107d6f61b",
-  "user_id": "6773a58315ba46e2986cf5b651475ec0",
+  "diagnosis_id": "9ad8c9c3e07c40a3bdd8d4b98c4a1f36",
+  "scan_id": "9ad8c9c3e07c40a3bdd8d4b98c4a1f36",
+  "farm_id": "90cae42296464c0c9dc760b6ae7b9e60",
+  "user_id": "d9f093c523944bc9b7e17058da38b6c5",
   "crop_type": "tomato",
-  "captured_at": "2026-11-22T21:33:14+00:00",
+  "captured_at": "2026-11-23T08:52:23+00:00",
   "label": "Tomato early blight",
   "status": "confirmed",
-  "disease_id": "02aaede388764b89b3edf23978a47f0f",
-  "confidence": 0.942,
-  "affected_area_pct": 0.4,
+  "disease_id": "8ca701b553924ae395834be8a5ff27ec",
+  "confidence": 0.9605,
+  "affected_area_pct": 10.0,
   "severity_level": "low",
   "spread_risk": "low",
   "spread_risk_explanation": "Low risk for Tomato early blight: humid (78%).",
-  "image_url": "http://localhost:8000/files/scans/7ced25eab60d44748d729ea5b566a4e4.jpg",
-  "overlay_url": "http://localhost:8000/files/overlays/21e2474f860c4089ad3df03ba13e5fcb.png",
+  "image_url": "http://localhost:8000/files/scans/d98c1fb3f99a44318f37ab151ab84062.jpg",
+  "overlay_url": "http://localhost:8000/files/overlays/7dfbaa0ee7b646dea509e14ba21fe67b.png",
   "reviewed_by": null,
   "advice": null,
   "weather": {
     "available": true,
     "notice": null,
-    "weather_id": "b3acd90667024e1db6e4894693257bb6",
+    "weather_id": "5cd1e3b672ed465d95034f2eeedfa429",
     "temperature": 34.0,
     "humidity": 78.0,
     "rainfall": 0.0,
-    "fetched_at": "2026-11-22T21:33:15+00:00"
+    "fetched_at": "2026-11-23T08:52:25+00:00",
+    "forecast": {
+      "hours": 24,
+      "max_temperature": 34.0,
+      "max_humidity": 83.0,
+      "total_rainfall": 0.0
+    }
   },
   "treatments": [
     {
       "type": "organic",
       "guidance": "Remove and bag infected leaves; a neem oil or bicarbonate spray every 7 days can slow spread.",
       "safety_warning": "Wear gloves and a mask; follow the product label and the pre-harvest interval.",
-      "treatment_id": "1cd7a7444be64b72aeec8f8c2f2520dd",
-      "disease_id": "02aaede388764b89b3edf23978a47f0f"
+      "treatment_id": "d6e297e32a5540aeaf53be8c5ed7813f",
+      "disease_id": "8ca701b553924ae395834be8a5ff27ec"
     },
     {
       "type": "chemical",
       "guidance": "Apply a fungicide registered for this disease on this crop, rotating active ingredients.",
       "safety_warning": "Use only products registered for this crop in the UAE and follow the label dose.",
-      "treatment_id": "c3efb55290774df3b1cee1124de4c051",
-      "disease_id": "02aaede388764b89b3edf23978a47f0f"
+      "treatment_id": "fc73930d4b524db690cde28d49bfbc40",
+      "disease_id": "8ca701b553924ae395834be8a5ff27ec"
     },
     {
       "type": "preventive",
       "guidance": "Water at the base in the morning, space plants for airflow and avoid working with wet plants.",
       "safety_warning": "Disinfect tools between plants.",
-      "treatment_id": "3e0b97de755f440881b0745d7cb5b6c5",
-      "disease_id": "02aaede388764b89b3edf23978a47f0f"
+      "treatment_id": "20e02742bfa541faa9690cbefde6e56b",
+      "disease_id": "8ca701b553924ae395834be8a5ff27ec"
     }
   ],
   "feedback": null
