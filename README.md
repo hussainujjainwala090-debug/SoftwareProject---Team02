@@ -32,7 +32,7 @@ Farmers often spot crop diseases late, and expert advice is not always within re
 | Design (Docs/) | Complete |
 | Backend (`src/backend`) | Working: all 5 services, 31 API endpoints, all tests passing |
 | ML (`src/ml`) | Working: MobileNetV2 disease classifier (93.0% test accuracy on PlantVillage tomato and pepper), severity segmentation, spread-risk rules |
-| Mobile app (`src/app`) | Working: all 8 screens, offline SQLite queue, 47 tests passing; checked in a browser against the real backend. Not yet run on an Android or iOS device |
+| Mobile app (`src/app`) | Working: all 8 screens, offline SQLite queue, 50 tests passing; checked in a browser against the real backend. Not yet run on an Android or iOS device |
 
 ## Repository layout
 ```
@@ -196,7 +196,7 @@ Results from 22-23 Nov 2026, branches `feature/backend` and `feature/app`. Full 
 | Unit and API tests (`pytest`, with TensorFlow installed) | **151 passed, 0 failed**, statement coverage 86%; the uncovered code is mainly the real Firebase adapters and the training/evaluation scripts, which are run directly instead ([backend_pytest.txt](Docs/test-evidence/backend_pytest.txt)) |
 | Disease classifier on 2,058 unseen PlantVillage test photos (NFR-03, target 85%) | **93.05% accuracy**; 89.2% of photos are above the 0.70 confidence threshold and 97.1% of those are correct; the rest are shown as "Uncertain" ([classifier_eval.txt](Docs/test-evidence/classifier_eval.txt), [classifier_training_eval.json](Docs/test-evidence/classifier_training_eval.json)) |
 | Real photos through `POST /scans` with the trained model | 11 of 12 classes diagnosed correctly, 1 shown as "Uncertain", both wrong-crop scans "Uncertain" ([real_photo_scans.txt](Docs/test-evidence/real_photo_scans.txt)) |
-| Mobile app: `flutter analyze` and `flutter test` | **No issues; 47 passed, 0 failed** ([app_flutter_test.txt](Docs/test-evidence/app_flutter_test.txt)) |
+| Mobile app: `flutter analyze` and `flutter test` | **No issues; 50 passed, 0 failed** ([app_flutter_test.txt](Docs/test-evidence/app_flutter_test.txt)) |
 | Mobile app in a browser against the real backend and model | 14 checks passed; found and fixed 3 problems ([app_browser_check.txt](Docs/test-evidence/app_browser_check.txt)) |
 | End-to-end smoke test over HTTP, live Open-Meteo weather | **19/19 steps passed** ([smoke_test.txt](Docs/test-evidence/smoke_test.txt)) |
 | Sample PDF report from the smoke run | [sample_report.pdf](Docs/test-evidence/sample_report.pdf) |
@@ -238,11 +238,11 @@ App tests (in `src/app/test`) for the same cases:
 | TC-02 | Farm profile validation (name, coordinates, crops) and what is saved | `login_and_profile_test.dart` |
 | TC-03, TC-20 (NFR-02) | Blur, darkness and non-image checks on the phone; a 10 MB photo compressed to 1 MB or less; blurry photos are not uploaded | `image_tools_test.dart`, `capture_test.dart` |
 | TC-04 to TC-09 | Result screen: label, confidence, severity, spread risk with weather, treatment tabs, uncertain advice; agronomist review | `result_history_test.dart`, `models_test.dart` |
-| TC-10 | History filters and date/disease search | `result_history_test.dart` |
+| TC-10 | History filters by status and crop, date/disease search | `result_history_test.dart` |
 | TC-12, TC-25 (FR-12, NFR-08) | Offline queue on real SQLite: pending, retry with the same scan_id, refused scans marked failed, restart recovery; offline capture then retry from the screen | `scan_queue_test.dart`, `capture_test.dart` |
-| TC-13 | Dashboard totals, weekly chart, common diseases, climate alert | `dashboard_admin_test.dart` |
+| TC-13 | Dashboard totals, weekly scans chart, severity trend chart, common diseases, climate alert | `dashboard_admin_test.dart` |
 | TC-15, TC-16 | PDF export and share link; feedback sent once | `result_history_test.dart` |
-| TC-17, TC-18 | Admin knowledge base (no delete), validated disease form, user actions, accuracy | `dashboard_admin_test.dart` |
+| TC-17, TC-18 | Admin knowledge base (no delete), validated disease form, add account (validated, errors shown), user actions, accuracy | `dashboard_admin_test.dart` |
 
 Not covered yet: TC-19 and TC-23 (performance and load, NFR-01 and NFR-06), TC-24 (uptime), TC-27 (TLS, depends on the deployment), TC-29 and TC-30 (privacy and usability acceptance tests with real users), TC-31 (compatibility on Android 10+ and iOS devices), TC-32 (code analysis report).
 
