@@ -1,0 +1,19 @@
+# Real PlantVillage test photos sent through POST /api/v1/scans with the trained classifier
+# Date: 2026-11-22T20:44Z  Backend in memory mode (fake weather), classifier: models/classifier.keras, blur threshold 20
+# One test-split photo per class (file index 9); the last two rows send the wrong crop on purpose
+
+photo class                                    crop sent HTTP  result                         conf   severity  area%
+Tomato___Bacterial_spot                        tomato    201   Tomato bacterial spot          0.953  medium    15.0
+Tomato___Early_blight                          tomato    201   Tomato early blight            0.942  low       0.4
+Tomato___Late_blight                           tomato    201   Tomato late blight             0.947  low       0.4
+Tomato___Leaf_Mold                             tomato    201   Tomato leaf mold               0.999  medium    16.4
+Tomato___Septoria_leaf_spot                    tomato    201   Tomato Septoria leaf spot      0.989  low       14.4
+Tomato___Spider_mites Two-spotted_spider_mite  tomato    201   Tomato spider mites            0.998  low       5.9
+Tomato___Target_Spot                           tomato    201   Uncertain                      0.515  None      None
+Tomato___Tomato_Yellow_Leaf_Curl_Virus         tomato    201   Tomato yellow leaf curl virus  0.995  low       9.1
+Tomato___Tomato_mosaic_virus                   tomato    201   Tomato mosaic virus            0.824  low       0.5
+Tomato___healthy                               tomato    201   Healthy                        1.000  None      0.0
+Pepper,_bell___Bacterial_spot                  pepper    201   Pepper bacterial spot          1.000  low       13.8
+Pepper,_bell___healthy                         pepper    201   Healthy                        0.946  None      0.0
+Tomato___Leaf_Mold                             pepper    201   Uncertain                      0.999  None      None
+Pepper,_bell___healthy                         tomato    201   Uncertain                      0.946  None      None

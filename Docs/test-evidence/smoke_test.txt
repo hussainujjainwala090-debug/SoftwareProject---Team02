@@ -1,0 +1,33 @@
+# AgriScan end-to-end smoke test over HTTP (uvicorn, memory mode, live Open-Meteo weather)
+# Date: 2026-11-22T19:22Z  Branch: feature/backend  Commit: 1495cfa
+# Command: python scripts/smoke_test.py http://127.0.0.1:8765
+
+[PASS] Health: HTTP 200
+[PASS] Request without token is rejected: HTTP 401
+[PASS] Admin registers (configured admin email): HTTP 201
+        role: admin
+[PASS] Farmer registers: HTTP 201
+[PASS] Agronomist registers: HTTP 201
+[PASS] Farmer is refused from admin pages: HTTP 403
+[PASS] Create farm profile (FR-02): HTTP 201
+[PASS] Live weather for the farm (FR-14): HTTP 200
+        available=True temp=24.2 humidity=58.0 rain=0.0 notice=None
+[PASS] Upload leaf scan (FR-03/04): HTTP 201
+        label=Uncertain status=uncertain confidence=0.0
+[PASS] Same scan_id uploaded again (offline retry): HTTP 201
+        same diagnosis returned: True
+[PASS] Agronomist reads knowledge base: HTTP 200
+[PASS] Agronomist reviews the diagnosis: HTTP 200
+        label=Tomato early blight severity=medium affected=17.8% spread_risk=medium
+        treatments=['organic', 'chemical', 'preventive']
+[PASS] Overlay image can be opened: HTTP 200
+[PASS] Farmer gives feedback (FR-16): HTTP 201
+[PASS] Export PDF report (FR-15): HTTP 201
+        PDF bytes=390068 starts with %PDF: True
+[PASS] History (FR-10): HTTP 200
+        entries: 1
+[PASS] Dashboard (FR-13): HTTP 200
+        scans=1 climate_alert=low
+[PASS] Admin: model accuracy (FR-18): HTTP 200
+[PASS] Admin: climate alert check (FR-11): HTTP 200
+All smoke steps passed.
