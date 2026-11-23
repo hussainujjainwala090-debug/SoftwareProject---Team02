@@ -1,0 +1,62 @@
+[
+  {
+    "class": "Tomato___Bacterial_spot",
+    "crop": "tomato",
+    "label": "Tomato bacterial spot"
+  },
+  {
+    "class": "Tomato___Early_blight",
+    "crop": "tomato",
+    "label": "Tomato early blight"
+  },
+  {
+    "class": "Tomato___Late_blight",
+    "crop": "tomato",
+    "label": "Tomato late blight"
+  },
+  {
+    "class": "Tomato___Leaf_Mold",
+    "crop": "tomato",
+    "label": "Tomato leaf mold"
+  },
+  {
+    "class": "Tomato___Septoria_leaf_spot",
+    "crop": "tomato",
+    "label": "Tomato Septoria leaf spot"
+  },
+  {
+    "class": "Tomato___Spider_mites Two-spotted_spider_mite",
+    "crop": "tomato",
+    "label": "Tomato spider mites"
+  },
+  {
+    "class": "Tomato___Target_Spot",
+    "crop": "tomato",
+    "label": "Tomato target spot"
+  },
+  {
+    "class": "Tomato___Tomato_Yellow_Leaf_Curl_Virus",
+    "crop": "tomato",
+    "label": "Tomato yellow leaf curl virus"
+  },
+  {
+    "class": "Tomato___Tomato_mosaic_virus",
+    "crop": "tomato",
+    "label": "Tomato mosaic virus"
+  },
+  {
+    "class": "Tomato___healthy",
+    "crop": "tomato",
+    "label": "healthy"
+  },
+  {
+    "class": "Pepper,_bell___Bacterial_spot",
+    "crop": "pepper",
+    "label": "Pepper bacterial spot"
+  },
+  {
+    "class": "Pepper,_bell___healthy",
+    "crop": "pepper",
+    "label": "healthy"
+  }
+]
