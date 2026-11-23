@@ -205,6 +205,7 @@ class _ClimateAlert extends StatelessWidget {
           const SizedBox(height: 6),
           Text(risk.explanation),
           Text('Weather: ${risk.weather.summary}'),
+          if (risk.weather.forecast != null) Text(risk.weather.forecast!.summary),
           if (risk.weather.notice != null) Text(risk.weather.notice!, style: TextStyle(color: Colors.orange.shade800)),
         ]),
       ),
