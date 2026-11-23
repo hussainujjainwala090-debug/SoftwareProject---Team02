@@ -45,7 +45,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
           DropdownButtonFormField<String>(
             initialValue: farm.farmId,
             decoration: const InputDecoration(labelText: 'Farm', border: OutlineInputBorder()),
-            items: [for (final f in session.farms) DropdownMenuItem(value: f.farmId, child: Text(f.name))],
+            isExpanded: true, // long farm names end in "..." instead of overflowing
+            items: [
+              for (final f in session.farms)
+                DropdownMenuItem(value: f.farmId, child: Text(f.name, overflow: TextOverflow.ellipsis)),
+            ],
             onChanged: (id) => session.selectFarm(id!),
           ),
           const SizedBox(height: 12),
@@ -128,25 +132,46 @@ class _Bars extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final maxV = max(1.0, values.fold<double>(0, (m, v) => max(m, v ?? 0)));
+    // The bars share whatever height the two text lines leave, so larger
+    // phone font sizes shrink the bars instead of overflowing the chart.
     return SizedBox(
       height: 150,
       child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
         for (var i = 0; i < values.length; i++)
           Expanded(
-            child: Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-              Text(values[i] == null ? '-' : format(values[i]!)),
-              Container(
-                height: 100 * (values[i] ?? 0) / maxV,
-                margin: const EdgeInsets.symmetric(horizontal: 10),
-                color: color ?? Theme.of(context).colorScheme.primary,
+            child: Column(children: [
+              Expanded(
+                child: Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+                  _OneLine(values[i] == null ? '-' : format(values[i]!)),
+                  Flexible(
+                    child: FractionallySizedBox(
+                      heightFactor: (values[i] ?? 0) / maxV,
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                        color: color ?? Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                  ),
+                ]),
               ),
               const SizedBox(height: 4),
-              Text(labels[i], style: Theme.of(context).textTheme.bodySmall),
+              _OneLine(labels[i], style: Theme.of(context).textTheme.bodySmall),
             ]),
           ),
       ]),
     );
   }
+}
+
+/// One line of chart text that shrinks to fit a narrow column.
+class _OneLine extends StatelessWidget {
+  const _OneLine(this.text, {this.style});
+  final String text;
+  final TextStyle? style;
+
+  @override
+  Widget build(BuildContext context) =>
+      FittedBox(fit: BoxFit.scaleDown, child: Text(text, style: style, maxLines: 1));
 }
 
 /// Horizontal bars for the most common diseases (UI-6 item 5).

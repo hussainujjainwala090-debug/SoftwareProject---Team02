@@ -33,6 +33,19 @@ void main() {
     expect(find.textContaining('Next 24 h:'), findsOneWidget); // FR-14 forecast
   });
 
+  testWidgets('dashboard charts fit a narrow phone with a large font size', (tester) async {
+    // Found on a Galaxy Z Fold7: "bottom overflowed by 2.0 pixels" in the
+    // tallest chart column. Any overflow makes this test fail.
+    final app = TestApp();
+    tester.platformDispatcher.textScaleFactorTestValue = 1.3;
+    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+    await app.show(tester, const DashboardScreen());
+    tester.view.physicalSize = const Size(904, 2316);
+    tester.view.devicePixelRatio = 2.625;
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('severityTrend')), findsOneWidget);
+  });
+
   testWidgets('admin knowledge base lists entries with Edit and Archive', (tester) async {
     final app = TestApp(role: 'admin');
     await app.show(tester, const AdminScreen());

@@ -151,7 +151,11 @@ class _CaptureScreenState extends State<CaptureScreen> {
           DropdownButtonFormField<String>(
             initialValue: farm.farmId,
             decoration: const InputDecoration(labelText: 'Farm', border: OutlineInputBorder()),
-            items: [for (final f in session.farms) DropdownMenuItem(value: f.farmId, child: Text(f.name))],
+            isExpanded: true, // long farm names end in "..." instead of overflowing
+            items: [
+              for (final f in session.farms)
+                DropdownMenuItem(value: f.farmId, child: Text(f.name, overflow: TextOverflow.ellipsis)),
+            ],
             onChanged: (id) => session.selectFarm(id!),
           ),
         if (session.farms.length > 1) const SizedBox(height: 12),
