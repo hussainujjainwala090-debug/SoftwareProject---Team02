@@ -3,6 +3,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../config.dart';
 import '../models.dart';
@@ -128,7 +129,19 @@ class _FarmProfileScreenState extends State<FarmProfileScreen> {
                       MarkerLayer(markers: [
                         Marker(point: point, child: const Icon(Icons.location_pin, color: Colors.red, size: 36)),
                       ]),
-                    const SimpleAttributionWidget(source: Text('OpenStreetMap contributors')),
+                    // OpenStreetMap requires credit. A one-line banner covered the
+                    // map and overflowed on phones, so the credit is shown for a
+                    // few seconds and then folds into an (i) button.
+                    RichAttributionWidget(
+                      showFlutterMapAttribution: false,
+                      popupInitialDisplayDuration: const Duration(seconds: 4),
+                      attributions: [
+                        TextSourceAttribution(
+                          'OpenStreetMap contributors',
+                          onTap: () => launchUrl(Uri.parse('https://www.openstreetmap.org/copyright')),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
