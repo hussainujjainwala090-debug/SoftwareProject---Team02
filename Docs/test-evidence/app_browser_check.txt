@@ -58,3 +58,25 @@ Second session (same setup, fresh backend), after the fix:
 Not checked here (no Android SDK, no Firebase project on this PC): Android/iOS
 builds, live camera, GPS, push notifications, on-phone SQLite (tested only with
 desktop SQLite in unit tests), Firebase sign-in, map tiles on a phone.
+
+----------------------------------------------------------------------------------
+# Second check: requirements added on 2026-11-23 (FR-07, FR-10, FR-13, FR-14, FR-18)
+# Same setup (fresh backend, trained classifier, live Open-Meteo, web build on
+# localhost:8080). Farm owner "owner@example.com" with a tomato + pepper farm; three
+# PlantVillage photos uploaded through POST /api/v1/scans:
+  Tomato early blight photo (102), tomato -> Tomato early blight (0.96), overlay stored
+  Tomato early blight photo (1),   tomato -> Uncertain (0.61), overlay stored (FR-07)
+  Pepper bacterial spot photo (5), pepper -> Pepper bacterial spot, overlay stored
+  All three weather responses had a live 24-hour forecast summary (FR-14).
+
+Checks:
+  15. PASS History (FR-10): the Crop menu lists All crops, Date palm, Tomato,
+      Cucumber, Pepper, Other; choosing Tomato sent GET /diagnoses?crop=tomato and
+      the answer held the two tomato diagnoses only.
+  16. PASS Dashboard (FR-13): "Severity trend (average affected leaf area)" chart
+      shows weeks 45-48, with 6.0% for week 48 and "-" for weeks without scans.
+  17. PASS Dashboard climate alert (FR-11, FR-14): "In the next 24 hours: Medium
+      risk for leaf diseases of pepper: humid (67%), mild temperature (24 C)" with
+      the current weather and "Next 24 h: up to 31 C, humidity up to 72%, rain 0.0 mm".
+  18. PASS Admin > Users (FR-18): "Add account" opens the form (name, email, first
+      password, role); Create sent POST /admin/users -> 201 and the list reloaded.
