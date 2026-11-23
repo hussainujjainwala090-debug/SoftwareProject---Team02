@@ -1,0 +1,12 @@
+# Packages the backend needs to run (no test tools). Used by requirements.txt
+# here and by requirements.txt in the repository root (Heroku).
+fastapi==0.165.0
+uvicorn[standard]==0.54.0
+pydantic==2.14.4
+pydantic-settings==2.16.3
+python-multipart==0.0.34
+httpx==0.28.1
+firebase-admin==7.8.0
+reportlab==5.1.0
+pillow==13.0.0
+numpy==2.5.5
