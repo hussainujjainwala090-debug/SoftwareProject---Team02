@@ -100,6 +100,24 @@ void main() {
     expect(find.text('Farm profile saved'), findsOneWidget);
   });
 
+  testWidgets('farm profile Save button stays above the Android navigation bar', (tester) async {
+    // Found on a Galaxy Z Fold7: the app is drawn behind the navigation bar,
+    // and the end of this page sat under it.
+    final app = TestApp(withFarm: false);
+    await app.show(tester, const FarmProfileScreen(showMap: false));
+    // Shorter than the phone, because tests leave out the 200 dp map; the page
+    // must scroll so its end reaches the bottom edge, as on the phone.
+    tester.view.physicalSize = const Size(904, 1400);
+    tester.view.devicePixelRatio = 2.625;
+    tester.view.padding = const FakeViewPadding(bottom: 126); // 48 dp gesture bar
+    addTearDown(tester.view.resetPadding);
+    await tester.pumpAndSettle();
+    await tester.drag(find.byType(ListView), const Offset(0, -2000)); // to the very end
+    await tester.pumpAndSettle();
+    final screenHeight = tester.view.physicalSize.height / tester.view.devicePixelRatio;
+    expect(tester.getBottomLeft(find.text('Save farm profile')).dy, lessThan(screenHeight - 48));
+  });
+
   testWidgets('tabs depend on the role', (tester) async {
     Future<List<String>> labels(String role) async {
       final app = TestApp(role: role);

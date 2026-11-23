@@ -10,6 +10,23 @@ import 'package:material_ui/material_ui.dart';
 import '../helpers.dart';
 
 void main() {
+  testWidgets('history status filter labels stay on one line on a narrow phone', (tester) async {
+    // Found on a Galaxy Z Fold7 with a large font: "Confirm/ed", "Uncertai/n".
+    final app = TestApp();
+    tester.platformDispatcher.textScaleFactorTestValue = 1.3;
+    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+    await app.show(tester, const HistoryScreen());
+    tester.view.physicalSize = const Size(904, 2316);
+    tester.view.devicePixelRatio = 2.625;
+    await tester.pumpAndSettle();
+    final segments = find.byType(SegmentedButton<String?>);
+    final oneLine = tester.getSize(find.descendant(of: segments, matching: find.text('All'))).height;
+    for (final label in ['Confirmed', 'Uncertain']) {
+      final height = tester.getSize(find.descendant(of: segments, matching: find.text(label))).height;
+      expect(height, lessThanOrEqualTo(oneLine), reason: '$label wrapped onto a second line');
+    }
+  });
+
   testWidgets('confirmed result: disease, confidence, severity, spread risk, treatments', (tester) async {
     final app = TestApp();
     await app.show(tester, ResultScreen(diagnosisId: app.backend.confirmedId));

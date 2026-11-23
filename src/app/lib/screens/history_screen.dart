@@ -84,11 +84,15 @@ class _HistoryScreenState extends State<HistoryScreen> {
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
+          // No tick icon and one line per label: on a narrow phone with a large
+          // font the labels broke mid-word ("Confirm/ed"). The selected one
+          // is still shown by its colour.
           child: SegmentedButton<String?>(
+            showSelectedIcon: false,
             segments: const [
-              ButtonSegment(value: null, label: Text('All')),
-              ButtonSegment(value: 'confirmed', label: Text('Confirmed')),
-              ButtonSegment(value: 'uncertain', label: Text('Uncertain')),
+              ButtonSegment(value: null, label: _FilterLabel('All')),
+              ButtonSegment(value: 'confirmed', label: _FilterLabel('Confirmed')),
+              ButtonSegment(value: 'uncertain', label: _FilterLabel('Uncertain')),
             ],
             selected: {_status},
             onSelectionChanged: (s) {
@@ -160,4 +164,15 @@ class _HistoryTile extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Status filter label kept on one line; it shrinks a little instead of
+/// breaking mid-word when the phone's font size is large.
+class _FilterLabel extends StatelessWidget {
+  const _FilterLabel(this.text);
+  final String text;
+
+  @override
+  Widget build(BuildContext context) =>
+      FittedBox(fit: BoxFit.scaleDown, child: Text(text, maxLines: 1, softWrap: false));
 }
