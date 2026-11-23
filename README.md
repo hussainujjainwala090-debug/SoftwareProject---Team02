@@ -33,7 +33,7 @@ Farmers often spot crop diseases late, and expert advice is not always within re
 | Design (Docs/) | Complete |
 | Backend (`src/backend`) | Working: all 5 services, 31 API endpoints, all tests passing |
 | ML (`src/ml`) | Working: MobileNetV2 disease classifier (93.0% test accuracy on PlantVillage tomato and pepper), severity segmentation, spread-risk rules |
-| Mobile app (`src/app`) | Working: all 8 screens, offline SQLite queue, 50 tests passing; checked in a browser against the real backend. Not yet run on an Android or iOS device |
+| Mobile app (`src/app`) | Working: all 8 screens, offline SQLite queue, 53 tests passing; checked in a browser and on an Android phone against the real backend. Not yet run on iOS |
 
 ## Repository layout
 ```
@@ -221,8 +221,9 @@ Results from 22-23 Nov 2026, branches `feature/backend` and `feature/app`. Full 
 | Unit and API tests (`pytest`, with TensorFlow installed) | **155 passed, 0 failed**, statement coverage 86%; the uncovered code is mainly the real Firebase adapters and the training/evaluation scripts, which are run directly instead ([backend_pytest.txt](Docs/test-evidence/backend_pytest.txt)) |
 | Disease classifier on 2,058 unseen PlantVillage test photos (NFR-03, target 85%) | **93.05% accuracy**; 89.2% of photos are above the 0.70 confidence threshold and 97.1% of those are correct; the rest are shown as "Uncertain" ([classifier_eval.txt](Docs/test-evidence/classifier_eval.txt), [classifier_training_eval.json](Docs/test-evidence/classifier_training_eval.json)) |
 | Real photos through `POST /scans` with the trained model | 11 of 12 classes diagnosed correctly, 1 shown as "Uncertain", both wrong-crop scans "Uncertain" ([real_photo_scans.txt](Docs/test-evidence/real_photo_scans.txt)) |
-| Mobile app: `flutter analyze` and `flutter test` | **No issues; 50 passed, 0 failed** ([app_flutter_test.txt](Docs/test-evidence/app_flutter_test.txt)) |
-| Mobile app in a browser against the real backend and model | 14 checks passed; found and fixed 3 problems ([app_browser_check.txt](Docs/test-evidence/app_browser_check.txt)) |
+| Mobile app: `flutter analyze` and `flutter test` | **No issues; 53 passed, 0 failed** ([app_flutter_test.txt](Docs/test-evidence/app_flutter_test.txt)) |
+| Mobile app in a browser against the real backend and model | 18 checks passed; found and fixed 3 problems ([app_browser_check.txt](Docs/test-evidence/app_browser_check.txt)) |
+| Mobile app on an Android phone (Samsung Galaxy Z Fold7, debug build, backend over USB) | Register, log in, farm profile with map, two leaf photos scanned with overlays, feedback, history and dashboard worked; 5 layout problems found (chart, map credit, farm drop-down, history filter, page end under the navigation bar), fixed, and covered by 3 new tests |
 | End-to-end smoke test over HTTP, live Open-Meteo weather | **19/19 steps passed** ([smoke_test.txt](Docs/test-evidence/smoke_test.txt)) |
 | Sample PDF report from the smoke run | [sample_report.pdf](Docs/test-evidence/sample_report.pdf) |
 
@@ -278,5 +279,5 @@ Known limits of this prototype (to be stated in the report):
 - Spread risk is rule-based because there is no labelled spread data.
 - The starter knowledge-base treatments (`src/backend/app/seed_data.py`) are general guidance written for the prototype and must be checked by an agronomist before real use.
 - The Firestore, Cloud Storage, Cloud Messaging and Firebase Auth adapters are written but not yet run against a real Firebase project; all tests use the in-memory versions.
-- The app has not been built or run on an Android or iOS device (no Android SDK on the development PC). Live camera, GPS, push notifications and on-phone SQLite are therefore untested on a phone; the queue is tested with desktop SQLite and the screens with widget tests and a browser.
+- The app has been run on one Android phone (Samsung Galaxy Z Fold7, debug build, backend on a PC reached over USB), but not on iOS. On the phone, the GPS button, the offline queue (on-phone SQLite) and push notifications (need a Firebase project) were not checked; the queue is tested with desktop SQLite.
 - Performance and load targets (NFR-01, NFR-06) and uptime (NFR-07) have not been measured.
