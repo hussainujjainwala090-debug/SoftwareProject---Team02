@@ -9,7 +9,7 @@ import '../state/session.dart';
 import '../widgets/common.dart';
 
 /// UI-6: Farm owner dashboard (FR-11, FR-13): summary numbers, scans per week,
-/// most common diseases and the current climate alert.
+/// severity trend, most common diseases and the current climate alert.
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
@@ -64,8 +64,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 InfoCard(
                   title: 'Scans per week',
                   child: _Bars(
-                    labels: [for (final w in d.scansPerWeek) 'Wk ${w.week.split('-W').last}'],
-                    values: [for (final w in d.scansPerWeek) w.scans],
+                    labels: [for (final w in d.scansPerWeek) _weekLabel(w.week)],
+                    values: [for (final w in d.scansPerWeek) w.scans.toDouble()],
+                    format: (v) => '${v.round()}',
+                  ),
+                ),
+                InfoCard(
+                  title: 'Severity trend (average affected leaf area)',
+                  child: _Bars(
+                    key: const Key('severityTrend'),
+                    labels: [for (final w in d.scansPerWeek) _weekLabel(w.week)],
+                    values: [for (final w in d.scansPerWeek) w.avgAffectedAreaPct],
+                    format: (v) => '${v.toStringAsFixed(1)}%',
+                    color: Theme.of(context).colorScheme.error,
                   ),
                 ),
                 InfoCard(
@@ -83,6 +94,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 }
+
+String _weekLabel(String isoWeek) => 'Wk ${isoWeek.split('-W').last}';
 
 class _Stat extends StatelessWidget {
   const _Stat(this.label, this.value);
@@ -103,26 +116,29 @@ class _Stat extends StatelessWidget {
       );
 }
 
-/// Vertical bar chart (UI-6 item 4).
+/// Vertical bar chart, one bar per week (UI-6 item 4; FR-13 severity trend).
+/// A null value means no data that week and is shown as "-".
 class _Bars extends StatelessWidget {
-  const _Bars({required this.labels, required this.values});
+  const _Bars({super.key, required this.labels, required this.values, required this.format, this.color});
   final List<String> labels;
-  final List<int> values;
+  final List<double?> values;
+  final String Function(double) format;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
-    final maxV = max(1, values.fold<int>(0, max));
+    final maxV = max(1.0, values.fold<double>(0, (m, v) => max(m, v ?? 0)));
     return SizedBox(
       height: 150,
       child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
         for (var i = 0; i < values.length; i++)
           Expanded(
             child: Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-              Text('${values[i]}'),
+              Text(values[i] == null ? '-' : format(values[i]!)),
               Container(
-                height: 100 * values[i] / maxV,
+                height: 100 * (values[i] ?? 0) / maxV,
                 margin: const EdgeInsets.symmetric(horizontal: 10),
-                color: Theme.of(context).colorScheme.primary,
+                color: color ?? Theme.of(context).colorScheme.primary,
               ),
               const SizedBox(height: 4),
               Text(labels[i], style: Theme.of(context).textTheme.bodySmall),
