@@ -1,6 +1,9 @@
-# AgriScan end-to-end smoke test over HTTP (uvicorn, memory mode, live Open-Meteo weather)
-# Date: 2026-11-22T19:22Z  Branch: feature/backend  Commit: 1495cfa
-# Command: python scripts/smoke_test.py http://127.0.0.1:8765
+# AgriScan end-to-end smoke test over HTTP (uvicorn, memory mode, live Open-Meteo weather, trained classifier loaded)
+# Date: 2026-11-22T22:15Z  Branch: feature/app  Commit: 112196b
+# Command: python src/backend/scripts/smoke_test.py http://localhost:8000
+# Note: the smoke photo is a synthetic drawing, not a real leaf. The trained model still labels it
+# 'Tomato Septoria leaf spot' with 0.97 confidence: a confident wrong answer on an image unlike its
+# training photos (a known limit of PlantVillage-only training). The agronomist review then corrects it.
 
 [PASS] Health: HTTP 200
 [PASS] Request without token is rejected: HTTP 401
@@ -11,9 +14,9 @@
 [PASS] Farmer is refused from admin pages: HTTP 403
 [PASS] Create farm profile (FR-02): HTTP 201
 [PASS] Live weather for the farm (FR-14): HTTP 200
-        available=True temp=24.2 humidity=58.0 rain=0.0 notice=None
+        available=True temp=22.6 humidity=66.0 rain=0.0 notice=None
 [PASS] Upload leaf scan (FR-03/04): HTTP 201
-        label=Uncertain status=uncertain confidence=0.0
+        label=Tomato Septoria leaf spot status=confirmed confidence=0.9663
 [PASS] Same scan_id uploaded again (offline retry): HTTP 201
         same diagnosis returned: True
 [PASS] Agronomist reads knowledge base: HTTP 200
@@ -23,11 +26,11 @@
 [PASS] Overlay image can be opened: HTTP 200
 [PASS] Farmer gives feedback (FR-16): HTTP 201
 [PASS] Export PDF report (FR-15): HTTP 201
-        PDF bytes=390068 starts with %PDF: True
+        PDF bytes=390069 starts with %PDF: True
 [PASS] History (FR-10): HTTP 200
         entries: 1
 [PASS] Dashboard (FR-13): HTTP 200
-        scans=1 climate_alert=low
+        scans=1 climate_alert=medium
 [PASS] Admin: model accuracy (FR-18): HTTP 200
 [PASS] Admin: climate alert check (FR-11): HTTP 200
 All smoke steps passed.

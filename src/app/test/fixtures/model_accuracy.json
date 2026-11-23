@@ -1,0 +1,12 @@
+{
+  "total_feedback": 1,
+  "overall_accuracy": 1.0,
+  "weeks": [
+    {
+      "week": "2026-W48",
+      "feedback": 1,
+      "correct": 1,
+      "accuracy": 1.0
+    }
+  ]
+}
