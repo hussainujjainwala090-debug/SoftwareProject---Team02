@@ -123,4 +123,26 @@ void main() {
     await tester.pumpAndSettle();
     expect(app.backend.requests.last.url.queryParameters, {'status': 'uncertain', 'q': 'blight'});
   });
+
+  testWidgets('history filters by crop (FR-10)', (tester) async {
+    final app = TestApp();
+    await app.show(tester, const HistoryScreen());
+    expect(find.text('All crops'), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('cropFilter')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Tomato').last);
+    await tester.pumpAndSettle();
+    expect(app.backend.requests.last.url.queryParameters, {'crop': 'tomato'});
+
+    await tester.tap(find.descendant(of: find.byType(SegmentedButton<String?>), matching: find.text('Confirmed')));
+    await tester.pumpAndSettle();
+    expect(app.backend.requests.last.url.queryParameters, {'status': 'confirmed', 'crop': 'tomato'});
+
+    await tester.tap(find.byKey(const Key('cropFilter')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('All crops').last);
+    await tester.pumpAndSettle();
+    expect(app.backend.requests.last.url.queryParameters, {'status': 'confirmed'});
+  });
 }
