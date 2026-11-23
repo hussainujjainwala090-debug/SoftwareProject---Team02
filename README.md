@@ -14,7 +14,7 @@ Farmers often spot crop diseases late, and expert advice is not always within re
 - Register, log in and manage farm profiles and crops
 - Capture or upload a leaf photo and get a diagnosis (offline captures are queued and sent later)
 - Severity estimate and treatment recommendations
-- Scan history and a dashboard with climate alerts
+- Scan history and a dashboard with climate alerts based on current weather and a 24-hour forecast
 - PDF report export
 - Admin knowledge base for diseases and treatments
 
@@ -23,7 +23,8 @@ Farmers often spot crop diseases late, and expert advice is not always within re
 - Backend: Python FastAPI
 - ML: TensorFlow CNN for disease classification
 - Data: Firebase (Firestore, Cloud Storage, Cloud Messaging, Authentication)
-- Weather: Open-Meteo (free, no API key), cached for up to 6 hours
+- Weather: Open-Meteo (free, no API key), current weather and 24-hour forecast, cached for up to 6 hours
+- Web: the Flutter app built for the browser (HTML5, JavaScript, CSS); Heroku-ready backend (`Procfile`)
 - PDF: ReportLab; tests: pytest
 
 ## Project status
@@ -165,6 +166,30 @@ flutter run --dart-define=API_BASE_URL=http://10.0.2.2:8000
 ```
 In `dev` mode any email signs in and the password is not checked. Register with the email listed in `AGRISCAN_ADMIN_EMAILS` to get the admin screens. For `firebase` mode, add the Firebase project's app config (for example with `flutterfire configure`) and run with `--dart-define=AUTH_MODE=firebase`; the backend must then run in `firebase` mode too.
 
+## Web dashboard (browser)
+The same Flutter app also builds for the web, so farm owners and admins can use the dashboard, history and admin screens in a browser. The build is plain HTML5, JavaScript and CSS that any static web host can serve:
+```powershell
+cd src/app
+flutter build web --dart-define=API_BASE_URL=http://localhost:8000
+```
+The files are written to `src/app/build/web`. To open them locally:
+```powershell
+python -m http.server 8080 --directory build/web
+```
+Then go to http://localhost:8080. In the browser, photos are picked from files, and scans taken offline are kept only until the page is closed (there is no SQLite there).
+
+## Deploying the backend to Heroku
+The repository is ready for Heroku's Python buildpack: `Procfile` starts the backend, `requirements.txt` in the repository root installs it (it reads `src/backend/requirements-runtime.txt` and `src/ml`), and `.python-version` picks Python 3.13. Heroku has no free plan, so this has **not been deployed or tried on Heroku**; the `Procfile` command was run locally.
+```powershell
+heroku create agriscan-<team>
+heroku config:set AGRISCAN_MODE=firebase AGRISCAN_FIREBASE_STORAGE_BUCKET=<bucket> AGRISCAN_FIREBASE_CREDENTIALS=/tmp/firebase-key.json AGRISCAN_PUBLIC_BASE_URL=https://agriscan-<team>.herokuapp.com
+heroku config:set FIREBASE_SERVICE_ACCOUNT_JSON="$(Get-Content -Raw <path-to-key.json>)"
+git push heroku main
+```
+- Use `firebase` mode for any public address. `memory` mode accepts development tokens, so anyone could sign in as anyone, and its data is lost when Heroku restarts the dyno.
+- The Firebase key is never committed: it is kept in the config var `FIREBASE_SERVICE_ACCOUNT_JSON`, and `.profile` writes it to `/tmp/firebase-key.json` when the dyno starts.
+- TensorFlow is not in the root `requirements.txt`, because it would probably not fit Heroku's 500 MB slug limit. Without it every scan is "Uncertain"; to diagnose on Heroku, add `tensorflow-cpu` and check the slug size.
+
 ## How to test
 Mobile app (from `src/app`):
 ```powershell
@@ -193,7 +218,7 @@ Results from 22-23 Nov 2026, branches `feature/backend` and `feature/app`. Full 
 
 | Run | Result |
 |---|---|
-| Unit and API tests (`pytest`, with TensorFlow installed) | **151 passed, 0 failed**, statement coverage 86%; the uncovered code is mainly the real Firebase adapters and the training/evaluation scripts, which are run directly instead ([backend_pytest.txt](Docs/test-evidence/backend_pytest.txt)) |
+| Unit and API tests (`pytest`, with TensorFlow installed) | **155 passed, 0 failed**, statement coverage 86%; the uncovered code is mainly the real Firebase adapters and the training/evaluation scripts, which are run directly instead ([backend_pytest.txt](Docs/test-evidence/backend_pytest.txt)) |
 | Disease classifier on 2,058 unseen PlantVillage test photos (NFR-03, target 85%) | **93.05% accuracy**; 89.2% of photos are above the 0.70 confidence threshold and 97.1% of those are correct; the rest are shown as "Uncertain" ([classifier_eval.txt](Docs/test-evidence/classifier_eval.txt), [classifier_training_eval.json](Docs/test-evidence/classifier_training_eval.json)) |
 | Real photos through `POST /scans` with the trained model | 11 of 12 classes diagnosed correctly, 1 shown as "Uncertain", both wrong-crop scans "Uncertain" ([real_photo_scans.txt](Docs/test-evidence/real_photo_scans.txt)) |
 | Mobile app: `flutter analyze` and `flutter test` | **No issues; 50 passed, 0 failed** ([app_flutter_test.txt](Docs/test-evidence/app_flutter_test.txt)) |
@@ -211,14 +236,14 @@ Tests by test case. IDs come from the Requirements Traceability Matrix: TC-01 to
 | TC-04 (FR-04) | Confident prediction is stored as confirmed with label and confidence; healthy leaves; classifier wrapper; every classifier label has a knowledge-base entry; real photos through the API | `test_scans.py`, `test_classifier.py`, `real_photo_scans.txt` |
 | TC-05 (FR-05) | Below 0.70, wrong crop, unknown label or no model gives "Uncertain" with retake/agronomist advice and no segmentation; agronomist confirms or corrects | `test_scans.py`, `test_review_feedback.py` |
 | TC-06 (FR-06) | Affected area within 2 points of the known lesion area on synthetic leaves; low/medium/high bands | `test_severity.py`, `test_scans.py` |
-| TC-07 (FR-07) | Red overlay produced, stored and downloadable | `test_severity.py`, `test_scans.py` |
+| TC-07 (FR-07) | Red overlay produced, stored and downloadable, for every diagnosis including uncertain and healthy ones | `test_severity.py`, `test_scans.py` |
 | TC-08 (FR-08) | Spread-risk levels and explanations; recalculated with new weather | `test_spread_risk.py`, `test_weather_forecast.py` |
 | TC-09 (FR-09) | Organic, chemical and preventive treatments, each with a safety warning | `test_scans.py`, `test_knowledge_base.py` |
 | TC-10 (FR-10) | History filters by status, crop, date and disease name; users only see their own | `test_scans.py` |
-| TC-11 (FR-11) | Push alert sent to the farm owner when risk is high, none in dry weather | `test_reports_dashboard.py` |
+| TC-11 (FR-11) | Push alert sent to the farm owner when risk is high now or in the next 24 hours, none in dry weather | `test_reports_dashboard.py` |
 | TC-12 (FR-12) | Same offline scan uploaded twice gives one diagnosis; a retry after a failed diagnosis completes it | `test_scans.py` |
 | TC-13 (FR-13) | Dashboard totals, scans per week, common diseases, climate alert | `test_reports_dashboard.py` |
-| TC-14 (FR-14) | Open-Meteo parsing and errors; weather stored and reused | `test_weather_client.py`, `test_weather_forecast.py` |
+| TC-14 (FR-14) | Open-Meteo parsing (current and 24-hour forecast) and errors; weather stored and reused; forecast summary returned | `test_weather_client.py`, `test_weather_forecast.py` |
 | TC-15 (FR-15) | PDF generated, stored and downloadable by link; only allowed users | `test_reports_dashboard.py` |
 | TC-16 (FR-16) | One feedback per diagnosis, only by the farmer | `test_review_feedback.py` |
 | TC-17 (FR-17) | Admin add/edit/archive/restore; no delete; duplicates and invalid entries refused; archived diseases not used for new scans, old diagnoses keep them | `test_knowledge_base.py`, `test_scans.py` |
@@ -237,10 +262,10 @@ App tests (in `src/app/test`) for the same cases:
 | TC-01 | Login and register validation, roles offered (no admin), unregistered account finishes registration, tabs per role | `login_and_profile_test.dart`, `api_client_test.dart` |
 | TC-02 | Farm profile validation (name, coordinates, crops) and what is saved | `login_and_profile_test.dart` |
 | TC-03, TC-20 (NFR-02) | Blur, darkness and non-image checks on the phone; a 10 MB photo compressed to 1 MB or less; blurry photos are not uploaded | `image_tools_test.dart`, `capture_test.dart` |
-| TC-04 to TC-09 | Result screen: label, confidence, severity, spread risk with weather, treatment tabs, uncertain advice; agronomist review | `result_history_test.dart`, `models_test.dart` |
+| TC-04 to TC-09, TC-14 | Result screen: label, confidence, severity, overlay (also on uncertain results), spread risk with weather and 24-hour forecast, treatment tabs, uncertain advice; agronomist review | `result_history_test.dart`, `models_test.dart` |
 | TC-10 | History filters by status and crop, date/disease search | `result_history_test.dart` |
 | TC-12, TC-25 (FR-12, NFR-08) | Offline queue on real SQLite: pending, retry with the same scan_id, refused scans marked failed, restart recovery; offline capture then retry from the screen | `scan_queue_test.dart`, `capture_test.dart` |
-| TC-13 | Dashboard totals, weekly scans chart, severity trend chart, common diseases, climate alert | `dashboard_admin_test.dart` |
+| TC-13 | Dashboard totals, weekly scans chart, severity trend chart, common diseases, climate alert with forecast | `dashboard_admin_test.dart` |
 | TC-15, TC-16 | PDF export and share link; feedback sent once | `result_history_test.dart` |
 | TC-17, TC-18 | Admin knowledge base (no delete), validated disease form, add account (validated, errors shown), user actions, accuracy | `dashboard_admin_test.dart` |
 
