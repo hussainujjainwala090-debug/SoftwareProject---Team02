@@ -97,7 +97,11 @@ class _FarmProfileScreenState extends State<FarmProfileScreen> {
       appBar: AppBar(title: const Text('Farm profile')),
       body: Form(
         key: _form,
-        child: ListView(padding: const EdgeInsets.all(16), children: [
+        // Android draws apps behind the navigation bar; the bottom padding
+        // keeps "Save farm profile" above it when scrolled to the end.
+        child: ListView(
+            padding: EdgeInsets.fromLTRB(16, 16, 16, 16 + MediaQuery.paddingOf(context).bottom),
+            children: [
           TextFormField(
             key: const Key('farmName'),
             controller: _name,

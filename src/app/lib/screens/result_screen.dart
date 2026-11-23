@@ -75,7 +75,10 @@ class _ResultScreenState extends State<ResultScreen> {
           ? Center(child: _error == null ? const CircularProgressIndicator() : MessageBox(_error!))
           : RefreshIndicator(
               onRefresh: _load,
-              child: ListView(padding: const EdgeInsets.all(16), children: [
+              // Bottom padding keeps the last buttons above Android's navigation bar.
+              child: ListView(
+                  padding: EdgeInsets.fromLTRB(16, 16, 16, 16 + MediaQuery.paddingOf(context).bottom),
+                  children: [
                 _image(d),
                 const SizedBox(height: 8),
                 if (d.overlayUrl != null)

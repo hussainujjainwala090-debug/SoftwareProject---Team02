@@ -54,7 +54,10 @@ class _ReportScreenState extends State<ReportScreen> {
           if (snap.hasError) return Center(child: MessageBox('${snap.error}'));
           if (!snap.hasData) return const Center(child: CircularProgressIndicator());
           final reports = snap.data!;
-          return ListView(padding: const EdgeInsets.all(16), children: [
+          // Bottom padding keeps the last item above Android's navigation bar.
+          return ListView(
+              padding: EdgeInsets.fromLTRB(16, 16, 16, 16 + MediaQuery.paddingOf(context).bottom),
+              children: [
             const Text('The report has the farm and crop, the original and highlighted photos, '
                 'the results, the treatments and the weather at the time of the scan.'),
             const SizedBox(height: 12),
