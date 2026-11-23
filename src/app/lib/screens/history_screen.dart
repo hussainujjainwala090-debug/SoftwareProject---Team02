@@ -1,13 +1,14 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:provider/provider.dart';
 
+import '../config.dart';
 import '../models.dart';
 import '../services/api_client.dart';
 import '../widgets/common.dart';
 import 'result_screen.dart';
 
 /// UI-5: Diagnosis history (FR-10). Search by disease name or by date
-/// (YYYY-MM-DD), filter All / Confirmed / Uncertain.
+/// (YYYY-MM-DD), filter by crop and by All / Confirmed / Uncertain.
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
 
@@ -18,6 +19,7 @@ class HistoryScreen extends StatefulWidget {
 class _HistoryScreenState extends State<HistoryScreen> {
   final _search = TextEditingController();
   String? _status; // null = all
+  String? _crop; // null = all crops
   late Future<List<Diagnosis>> _items = _fetch();
 
   static final _date = RegExp(r'^\d{4}-\d{2}-\d{2}$');
@@ -27,6 +29,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
     final isDate = _date.hasMatch(text);
     return context.read<ApiClient>().history(
           status: _status,
+          crop: _crop,
           q: isDate ? null : text,
           dateFrom: isDate ? text : null,
           dateTo: isDate ? text : null,
@@ -60,6 +63,23 @@ class _HistoryScreenState extends State<HistoryScreen> {
               border: OutlineInputBorder(),
             ),
             onSubmitted: (_) => _reload(),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+          child: DropdownButtonFormField<String?>(
+            key: const Key('cropFilter'),
+            initialValue: _crop,
+            decoration: const InputDecoration(
+                labelText: 'Crop', border: OutlineInputBorder(), isDense: true),
+            items: [
+              const DropdownMenuItem(value: null, child: Text('All crops')),
+              for (final e in cropLabels.entries) DropdownMenuItem(value: e.key, child: Text(e.value)),
+            ],
+            onChanged: (crop) {
+              _crop = crop;
+              _reload();
+            },
           ),
         ),
         Padding(
