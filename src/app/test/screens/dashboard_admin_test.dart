@@ -83,4 +83,59 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.textContaining('100.0% correct (1 answers)'), findsOneWidget);
   });
+
+  Future<void> openAddAccount(WidgetTester tester, TestApp app) async {
+    await app.show(tester, const AdminScreen());
+    await tester.tap(find.text('Users'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Add account'));
+    await tester.pumpAndSettle();
+  }
+
+  testWidgets('admin creates an account after the form is validated (FR-18)', (tester) async {
+    final app = TestApp(role: 'admin');
+    Map<String, dynamic>? sent;
+    app.backend.overrides['POST /admin/users'] = (req) {
+      sent = jsonDecode(req.body) as Map<String, dynamic>;
+      return httpJson((fixture('users') as List).first, 201);
+    };
+    await openAddAccount(tester, app);
+
+    await tester.enterText(find.byKey(const Key('newEmail')), 'not-an-email');
+    await tester.enterText(find.byKey(const Key('newPassword')), 'short');
+    await tester.tap(find.text('Create'));
+    await tester.pumpAndSettle();
+    expect(find.text('Required'), findsOneWidget);
+    expect(find.text('Enter a valid email'), findsOneWidget);
+    expect(find.text('At least 8 characters'), findsOneWidget);
+    expect(sent, isNull);
+
+    final listLoads = app.backend.sent('GET', '/admin/users').length;
+    await tester.enterText(find.byKey(const Key('newName')), 'Sara Ali');
+    await tester.enterText(find.byKey(const Key('newEmail')), 'sara@example.com');
+    await tester.enterText(find.byKey(const Key('newPassword')), 'first-pass-123');
+    await tester.tap(find.byKey(const Key('newRole')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Agronomist').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Create'));
+    await tester.pumpAndSettle();
+    expect(sent, {'name': 'Sara Ali', 'email': 'sara@example.com', 'password': 'first-pass-123', 'role': 'agronomist'});
+    expect(find.byType(CreateAccountForm), findsNothing); // dialog closed
+    expect(app.backend.sent('GET', '/admin/users').length, listLoads + 1); // list reloaded
+  });
+
+  testWidgets('create account shows the backend error, e.g. duplicate email (FR-18)', (tester) async {
+    final app = TestApp(role: 'admin');
+    app.backend.overrides['POST /admin/users'] =
+        (req) => httpJson({'detail': 'A user with this email already exists'}, 409);
+    await openAddAccount(tester, app);
+    await tester.enterText(find.byKey(const Key('newName')), 'Sara Ali');
+    await tester.enterText(find.byKey(const Key('newEmail')), 'sara@example.com');
+    await tester.enterText(find.byKey(const Key('newPassword')), 'first-pass-123');
+    await tester.tap(find.text('Create'));
+    await tester.pumpAndSettle();
+    expect(find.text('A user with this email already exists'), findsOneWidget);
+    expect(find.byType(CreateAccountForm), findsOneWidget); // stays open to fix
+  });
 }
