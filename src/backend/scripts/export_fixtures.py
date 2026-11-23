@@ -17,7 +17,7 @@ from fastapi.testclient import TestClient
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from app.adapters.weather import FakeWeatherClient  # noqa: E402
+from app.adapters.weather import FakeWeatherClient, HourlyWeather, WeatherReading  # noqa: E402
 from app.config import Settings  # noqa: E402
 from app.container import build_container  # noqa: E402
 from app.main import create_app  # noqa: E402
@@ -30,7 +30,10 @@ def main(photo: Path) -> None:
 
     settings = Settings(_env_file=None, weather_provider="fake", admin_emails=["admin@example.com"],
                         local_storage_dir=tempfile.mkdtemp(), public_base_url="http://localhost:8000")
-    container = build_container(settings, weather=FakeWeatherClient())
+    # Fixed weather with a 24-hour forecast that gets cooler and more humid overnight.
+    forecast = tuple(HourlyWeather(34.0 - h * 0.5, 60.0 + h, 0.0) for h in range(24))
+    container = build_container(settings, weather=FakeWeatherClient(
+        WeatherReading(temperature=34.0, humidity=78.0, rainfall=0.0, forecast=forecast)))
     OUT.mkdir(parents=True, exist_ok=True)
     saved = []
 
