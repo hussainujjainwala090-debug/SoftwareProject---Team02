@@ -16,7 +16,12 @@ void main() {
     expect(find.text('Scans'), findsOneWidget);
     expect(find.text('${d['total_scans']}'), findsWidgets);
     expect(find.text('Scans per week'), findsOneWidget);
-    expect(find.textContaining('Wk '), findsNWidgets(4));
+    expect(find.textContaining('Wk '), findsNWidgets(8)); // scans chart + severity chart
+    // FR-13 severity trend: weeks without confirmed diagnoses show "-".
+    final trend = find.byKey(const Key('severityTrend'));
+    expect(find.text('Severity trend (average affected leaf area)'), findsOneWidget);
+    expect(find.descendant(of: trend, matching: find.text('0.4%')), findsOneWidget);
+    expect(find.descendant(of: trend, matching: find.text('-')), findsNWidgets(3));
     expect(find.text('Tomato early blight'), findsOneWidget);
     expect(find.textContaining('Climate alert:'), findsOneWidget);
   });
