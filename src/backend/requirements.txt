@@ -1,0 +1,9 @@
+# AgriScan backend. Install from src/backend:  pip install -r requirements.txt
+-r requirements-runtime.txt
+
+# ML components (severity, spread risk, classifier wrapper) from this repository
+-e ../ml
+
+# Tests
+pytest==9.2.0
+pytest-cov==7.1.0

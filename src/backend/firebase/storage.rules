@@ -1,0 +1,12 @@
+rules_version = '2';
+
+// Leaf images, overlays and PDF reports are uploaded by the backend (Admin SDK)
+// and shared through time-limited signed URLs, so clients get no direct access
+// (NFR-12: images are used only for diagnosis).
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
