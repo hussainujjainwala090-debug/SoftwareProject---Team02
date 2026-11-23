@@ -1,0 +1,19 @@
+{
+  "spread_risk": "low",
+  "explanation": "Low risk for Tomato early blight: humid (78%).",
+  "weather": {
+    "available": true,
+    "notice": null,
+    "weather_id": "5cd1e3b672ed465d95034f2eeedfa429",
+    "temperature": 34.0,
+    "humidity": 78.0,
+    "rainfall": 0.0,
+    "fetched_at": "2026-11-23T08:52:25+00:00",
+    "forecast": {
+      "hours": 24,
+      "max_temperature": 34.0,
+      "max_humidity": 83.0,
+      "total_rainfall": 0.0
+    }
+  }
+}

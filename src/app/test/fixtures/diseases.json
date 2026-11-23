@@ -1,0 +1,272 @@
+[
+  {
+    "disease_id": "4cf9c695b375445fa7bc7bd093b37f33",
+    "name": "Tomato bacterial spot",
+    "crop_type": "tomato",
+    "symptoms": "Small dark, water-soaked spots on leaves and fruit.",
+    "archived": false,
+    "treatments": [
+      {
+        "type": "organic",
+        "guidance": "Remove infected leaves and avoid overhead watering; copper-based organic sprays can reduce spread.",
+        "safety_warning": "Wear gloves and a mask; follow the product label and the pre-harvest interval.",
+        "treatment_id": "c275285dc84b42c291736016abf5132f",
+        "disease_id": "4cf9c695b375445fa7bc7bd093b37f33"
+      },
+      {
+        "type": "chemical",
+        "guidance": "Apply a copper-based bactericide registered for this crop.",
+        "safety_warning": "Use only products registered for this crop in the UAE and follow the label dose.",
+        "treatment_id": "04dc23b00b9e4896bb42b98e8b2d021f",
+        "disease_id": "4cf9c695b375445fa7bc7bd093b37f33"
+      },
+      {
+        "type": "preventive",
+        "guidance": "Use certified clean seed or seedlings and rotate crops for at least two seasons.",
+        "safety_warning": "Disinfect tools between plants.",
+        "treatment_id": "d2ab2774c6c74963866884fcaeb7db83",
+        "disease_id": "4cf9c695b375445fa7bc7bd093b37f33"
+      }
+    ]
+  },
+  {
+    "disease_id": "8ca701b553924ae395834be8a5ff27ec",
+    "name": "Tomato early blight",
+    "crop_type": "tomato",
+    "symptoms": "Brown spots with rings (target pattern) on older leaves.",
+    "archived": false,
+    "treatments": [
+      {
+        "type": "organic",
+        "guidance": "Remove and bag infected leaves; a neem oil or bicarbonate spray every 7 days can slow spread.",
+        "safety_warning": "Wear gloves and a mask; follow the product label and the pre-harvest interval.",
+        "treatment_id": "d6e297e32a5540aeaf53be8c5ed7813f",
+        "disease_id": "8ca701b553924ae395834be8a5ff27ec"
+      },
+      {
+        "type": "chemical",
+        "guidance": "Apply a fungicide registered for this disease on this crop, rotating active ingredients.",
+        "safety_warning": "Use only products registered for this crop in the UAE and follow the label dose.",
+        "treatment_id": "fc73930d4b524db690cde28d49bfbc40",
+        "disease_id": "8ca701b553924ae395834be8a5ff27ec"
+      },
+      {
+        "type": "preventive",
+        "guidance": "Water at the base in the morning, space plants for airflow and avoid working with wet plants.",
+        "safety_warning": "Disinfect tools between plants.",
+        "treatment_id": "20e02742bfa541faa9690cbefde6e56b",
+        "disease_id": "8ca701b553924ae395834be8a5ff27ec"
+      }
+    ]
+  },
+  {
+    "disease_id": "7d874f1c175843059064e7a3aabc0af4",
+    "name": "Tomato late blight",
+    "crop_type": "tomato",
+    "symptoms": "Large grey-green to brown patches; white mould under leaves in humid weather.",
+    "archived": false,
+    "treatments": [
+      {
+        "type": "organic",
+        "guidance": "Remove and bag infected leaves; a neem oil or bicarbonate spray every 7 days can slow spread.",
+        "safety_warning": "Wear gloves and a mask; follow the product label and the pre-harvest interval.",
+        "treatment_id": "d6ecd8c707944d04a47379c349834f58",
+        "disease_id": "7d874f1c175843059064e7a3aabc0af4"
+      },
+      {
+        "type": "chemical",
+        "guidance": "Apply a fungicide registered for this disease on this crop, rotating active ingredients.",
+        "safety_warning": "Use only products registered for this crop in the UAE and follow the label dose.",
+        "treatment_id": "402b46249dd24b79bfe123ee080b898f",
+        "disease_id": "7d874f1c175843059064e7a3aabc0af4"
+      },
+      {
+        "type": "preventive",
+        "guidance": "Water at the base in the morning, space plants for airflow and avoid working with wet plants.",
+        "safety_warning": "Disinfect tools between plants.",
+        "treatment_id": "5f6bb16962f64cb29f496715c7854c2d",
+        "disease_id": "7d874f1c175843059064e7a3aabc0af4"
+      }
+    ]
+  },
+  {
+    "disease_id": "96477edf069e43bebaebbfc2b4f4cac9",
+    "name": "Tomato leaf mold",
+    "crop_type": "tomato",
+    "symptoms": "Yellow patches on top of leaves, olive-green mould underneath.",
+    "archived": false,
+    "treatments": [
+      {
+        "type": "organic",
+        "guidance": "Remove and bag infected leaves; a neem oil or bicarbonate spray every 7 days can slow spread.",
+        "safety_warning": "Wear gloves and a mask; follow the product label and the pre-harvest interval.",
+        "treatment_id": "92cffa62227642caa00d9410d8131402",
+        "disease_id": "96477edf069e43bebaebbfc2b4f4cac9"
+      },
+      {
+        "type": "chemical",
+        "guidance": "Apply a fungicide registered for this disease on this crop, rotating active ingredients.",
+        "safety_warning": "Use only products registered for this crop in the UAE and follow the label dose.",
+        "treatment_id": "05dd5f41f1d84fb5985f99d8fbeccc6f",
+        "disease_id": "96477edf069e43bebaebbfc2b4f4cac9"
+      },
+      {
+        "type": "preventive",
+        "guidance": "Water at the base in the morning, space plants for airflow and avoid working with wet plants.",
+        "safety_warning": "Disinfect tools between plants.",
+        "treatment_id": "43ec5c8d1ac24cea823af0aa1250db42",
+        "disease_id": "96477edf069e43bebaebbfc2b4f4cac9"
+      }
+    ]
+  },
+  {
+    "disease_id": "8ee48da63512405c81df0c65024ff32d",
+    "name": "Tomato mosaic virus",
+    "crop_type": "tomato",
+    "symptoms": "Light and dark green mosaic pattern, distorted leaves.",
+    "archived": false,
+    "treatments": [
+      {
+        "type": "organic",
+        "guidance": "There is no cure: remove and destroy infected plants to protect healthy ones.",
+        "safety_warning": "Do not compost infected plants.",
+        "treatment_id": "568d9d8c15ea491e8c3633f404c8bab1",
+        "disease_id": "8ee48da63512405c81df0c65024ff32d"
+      },
+      {
+        "type": "chemical",
+        "guidance": "No chemical cures the virus; control the spread by hands and tools with a registered product if needed.",
+        "safety_warning": "Use only products registered for this crop in the UAE and follow the label dose.",
+        "treatment_id": "2e55fc53e3cb45d0a99cd965cc69ec5c",
+        "disease_id": "8ee48da63512405c81df0c65024ff32d"
+      },
+      {
+        "type": "preventive",
+        "guidance": "Use resistant varieties, control spread by hands and tools and keep weeds down around the crop.",
+        "safety_warning": "Wash hands and tools after handling infected plants.",
+        "treatment_id": "95d57126b24b4fbf84bc57189b0b7c2c",
+        "disease_id": "8ee48da63512405c81df0c65024ff32d"
+      }
+    ]
+  },
+  {
+    "disease_id": "807450eda1c240c79cca9feba9b6266b",
+    "name": "Tomato Septoria leaf spot",
+    "crop_type": "tomato",
+    "symptoms": "Many small round spots with dark edges and grey centres.",
+    "archived": false,
+    "treatments": [
+      {
+        "type": "organic",
+        "guidance": "Remove and bag infected leaves; a neem oil or bicarbonate spray every 7 days can slow spread.",
+        "safety_warning": "Wear gloves and a mask; follow the product label and the pre-harvest interval.",
+        "treatment_id": "bc8f416c0b974b1d922f8d7d8bacfc17",
+        "disease_id": "807450eda1c240c79cca9feba9b6266b"
+      },
+      {
+        "type": "chemical",
+        "guidance": "Apply a fungicide registered for this disease on this crop, rotating active ingredients.",
+        "safety_warning": "Use only products registered for this crop in the UAE and follow the label dose.",
+        "treatment_id": "545655a15fa2415ca63fdd0369d0b591",
+        "disease_id": "807450eda1c240c79cca9feba9b6266b"
+      },
+      {
+        "type": "preventive",
+        "guidance": "Water at the base in the morning, space plants for airflow and avoid working with wet plants.",
+        "safety_warning": "Disinfect tools between plants.",
+        "treatment_id": "07b92cbceff040eeac34a22331045c9b",
+        "disease_id": "807450eda1c240c79cca9feba9b6266b"
+      }
+    ]
+  },
+  {
+    "disease_id": "1549a017fc6c4647a772e064e4a62088",
+    "name": "Tomato spider mites",
+    "crop_type": "tomato",
+    "symptoms": "Fine yellow speckling on leaves, fine webbing underneath.",
+    "archived": false,
+    "treatments": [
+      {
+        "type": "organic",
+        "guidance": "Spray the underside of leaves with water or insecticidal soap every 5-7 days.",
+        "safety_warning": "Wear gloves and a mask; follow the product label and the pre-harvest interval.",
+        "treatment_id": "59c0f46ebc7f470397de0b5937a246f6",
+        "disease_id": "1549a017fc6c4647a772e064e4a62088"
+      },
+      {
+        "type": "chemical",
+        "guidance": "Apply a miticide registered for tomato, rotating active ingredients.",
+        "safety_warning": "Use only products registered for this crop in the UAE and follow the label dose.",
+        "treatment_id": "ec87ffa13f78460f9b9c59f5f4308fc9",
+        "disease_id": "1549a017fc6c4647a772e064e4a62088"
+      },
+      {
+        "type": "preventive",
+        "guidance": "Avoid drought stress and dust; check the underside of leaves weekly.",
+        "safety_warning": "Keep children and animals away from treated plants until dry.",
+        "treatment_id": "dbbdde0388194650bead09a2b34a8218",
+        "disease_id": "1549a017fc6c4647a772e064e4a62088"
+      }
+    ]
+  },
+  {
+    "disease_id": "9d42ce1a87ce47469dce2b0aa52472d3",
+    "name": "Tomato target spot",
+    "crop_type": "tomato",
+    "symptoms": "Brown spots with light centres and rings on leaves.",
+    "archived": false,
+    "treatments": [
+      {
+        "type": "organic",
+        "guidance": "Remove and bag infected leaves; a neem oil or bicarbonate spray every 7 days can slow spread.",
+        "safety_warning": "Wear gloves and a mask; follow the product label and the pre-harvest interval.",
+        "treatment_id": "fa0451264b0b4a9596a2cb101c083794",
+        "disease_id": "9d42ce1a87ce47469dce2b0aa52472d3"
+      },
+      {
+        "type": "chemical",
+        "guidance": "Apply a fungicide registered for this disease on this crop, rotating active ingredients.",
+        "safety_warning": "Use only products registered for this crop in the UAE and follow the label dose.",
+        "treatment_id": "2d500ff58ba440999467aee431d17e1f",
+        "disease_id": "9d42ce1a87ce47469dce2b0aa52472d3"
+      },
+      {
+        "type": "preventive",
+        "guidance": "Water at the base in the morning, space plants for airflow and avoid working with wet plants.",
+        "safety_warning": "Disinfect tools between plants.",
+        "treatment_id": "5aca10d7a02a44999a3c12941b6964f9",
+        "disease_id": "9d42ce1a87ce47469dce2b0aa52472d3"
+      }
+    ]
+  },
+  {
+    "disease_id": "3edb6cbf9ea74976b932cd55c147a6e2",
+    "name": "Tomato yellow leaf curl virus",
+    "crop_type": "tomato",
+    "symptoms": "Upward curling, yellow leaf edges, stunted plants.",
+    "archived": false,
+    "treatments": [
+      {
+        "type": "organic",
+        "guidance": "There is no cure: remove and destroy infected plants to protect healthy ones.",
+        "safety_warning": "Do not compost infected plants.",
+        "treatment_id": "a08fbec7f0be4f909567755ad6ac602e",
+        "disease_id": "3edb6cbf9ea74976b932cd55c147a6e2"
+      },
+      {
+        "type": "chemical",
+        "guidance": "No chemical cures the virus; control the whiteflies with a registered product if needed.",
+        "safety_warning": "Use only products registered for this crop in the UAE and follow the label dose.",
+        "treatment_id": "42834f88527e47a19f239d5053668d21",
+        "disease_id": "3edb6cbf9ea74976b932cd55c147a6e2"
+      },
+      {
+        "type": "preventive",
+        "guidance": "Use resistant varieties, control whiteflies and keep weeds down around the crop.",
+        "safety_warning": "Wash hands and tools after handling infected plants.",
+        "treatment_id": "5f0d10c5c1f4471e8dd3f4ebfe1c7db8",
+        "disease_id": "3edb6cbf9ea74976b932cd55c147a6e2"
+      }
+    ]
+  }
+]

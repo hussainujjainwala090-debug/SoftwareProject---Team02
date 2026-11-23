@@ -1,0 +1,16 @@
+[
+  {
+    "user_id": "bf937d23c5c2486d87b42dd181fde2a2",
+    "name": "Admin",
+    "email": "admin@example.com",
+    "role": "admin",
+    "disabled": false
+  },
+  {
+    "user_id": "d9f093c523944bc9b7e17058da38b6c5",
+    "name": "Aisha K.",
+    "email": "farmer@example.com",
+    "role": "farmer",
+    "disabled": false
+  }
+]

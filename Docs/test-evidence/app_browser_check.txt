@@ -1,0 +1,82 @@
+# AgriScan app: manual end-to-end check in a browser
+# Date: 2026-11-22 (UTC)  Branch: feature/app
+# Setup: backend in memory mode with the trained classifier (ML environment), live
+# Open-Meteo weather; Flutter web build (flutter build web) served on localhost:8080;
+# AUTH_MODE=dev. Six real PlantVillage test photos were uploaded for the farmer through
+# POST /api/v1/scans first, because the browser's file picker cannot be driven here.
+
+Uploads through the API with the trained model (crop sent -> result):
+  Tomato early blight photo,        tomato    -> Uncertain (confidence 0.50)
+  Tomato Septoria leaf spot photo,  tomato    -> Tomato Septoria leaf spot (0.92), severity low
+  Pepper bacterial spot photo,      pepper    -> Pepper bacterial spot (0.94), severity low
+  Tomato leaf mold photo,           tomato    -> Tomato leaf mold (0.99), severity low
+  Tomato target spot photo,         tomato    -> Uncertain (0.52)
+  Tomato leaf mold photo,           date palm -> Uncertain (wrong crop selected)
+
+Steps in the app (all PASS unless noted):
+  1. UI-1  Log in as farmer@example.com -> Scan tab opens with the farm's crops.
+  2. UI-3  Capture screen shows crop drop-down and guide frame. Camera access is
+           blocked in this browser, so live capture was NOT checked here.
+  3. UI-5  History lists the 6 scans with photo thumbnails from the backend;
+           Confirmed filter works.
+  4. UI-4  Result for Tomato leaf mold: overlay image with marked area,
+           Original/Overlay switch, confidence 99%, severity LOW, spread risk MEDIUM
+           with live weather (23 C, humidity 65%, rain 0 mm), treatment tabs with
+           safety warning.
+           FOUND: "Was this correct?" was squeezed to one letter per line by the
+           theme's full-width buttons; affected area showed "0%" for 0.4%.
+           FIXED in commit 2c28a65, with a regression test; widget tests now use
+           the app theme.
+  5. UI-6  Dashboard: 6 scans, 3 diseases, 3 uncertain; scans per week chart,
+           most common diseases, climate alert "MEDIUM spread risk" with live weather.
+  6. UI-2  Profile lists the farm with its crops; sign out works.
+  7. UI-1  Register admin@example.com (configured first admin) -> Admin tab appears.
+  8. UI-8  Knowledge base lists the seeded diseases with Edit and Archive (no
+           Delete); Users tab lists Admin ("You") and the farmer with an actions menu.
+
+Second session (same setup, fresh backend), after the fix:
+  9. UI-1  Log in as grower@example.com (two farms). Pressing Enter in the password
+           field did not log in. FIXED with a test (Enter now submits).
+ 10. UI-3  Farm selector appears with two farms; switching to "Liwa date farm"
+           changes the crop list to Cucumber / Date palm.
+ 11. UI-6  Dashboard follows the selected farm (Liwa: 0 scans).
+ 12. UI-4  Pepper bacterial spot result: feedback row now on one line with Yes / No;
+           affected area 8.4%.
+ 13. UI-7  "Save and export report" creates the report and opens the report screen
+           ("Just created", Open and Copy link buttons). The browser pane blocks
+           pop-up windows, so "Open" could not be confirmed here; the PDF link itself
+           is downloaded successfully by the smoke test (smoke_test.txt).
+ 14. UC-01 Register agro@example.com as Agronomist -> only History and Profile tabs;
+           History shows every farm's scans; Uncertain filter lists the target-spot
+           scan; the result shows the uncertain advice and the "Agronomist review"
+           panel (no feedback row); choosing "Tomato target spot" and "Confirm or
+           correct" turns it into a confirmed, reviewed diagnosis with severity LOW,
+           affected area 7.2% and an overlay.
+           FOUND: the result still showed "Confidence: 52%" after review. FIXED with
+           a test: it now says "Confirmed by an agronomist (model confidence was 52%)".
+
+Not checked here (no Android SDK, no Firebase project on this PC): Android/iOS
+builds, live camera, GPS, push notifications, on-phone SQLite (tested only with
+desktop SQLite in unit tests), Firebase sign-in, map tiles on a phone.
+
+----------------------------------------------------------------------------------
+# Second check: requirements added on 2026-11-23 (FR-07, FR-10, FR-13, FR-14, FR-18)
+# Same setup (fresh backend, trained classifier, live Open-Meteo, web build on
+# localhost:8080). Farm owner "owner@example.com" with a tomato + pepper farm; three
+# PlantVillage photos uploaded through POST /api/v1/scans:
+  Tomato early blight photo (102), tomato -> Tomato early blight (0.96), overlay stored
+  Tomato early blight photo (1),   tomato -> Uncertain (0.61), overlay stored (FR-07)
+  Pepper bacterial spot photo (5), pepper -> Pepper bacterial spot, overlay stored
+  All three weather responses had a live 24-hour forecast summary (FR-14).
+
+Checks:
+  15. PASS History (FR-10): the Crop menu lists All crops, Date palm, Tomato,
+      Cucumber, Pepper, Other; choosing Tomato sent GET /diagnoses?crop=tomato and
+      the answer held the two tomato diagnoses only.
+  16. PASS Dashboard (FR-13): "Severity trend (average affected leaf area)" chart
+      shows weeks 45-48, with 6.0% for week 48 and "-" for weeks without scans.
+  17. PASS Dashboard climate alert (FR-11, FR-14): "In the next 24 hours: Medium
+      risk for leaf diseases of pepper: humid (67%), mild temperature (24 C)" with
+      the current weather and "Next 24 h: up to 31 C, humidity up to 72%, rain 0.0 mm".
+  18. PASS Admin > Users (FR-18): "Add account" opens the form (name, email, first
+      password, role); Create sent POST /admin/users -> 201 and the list reloaded.
