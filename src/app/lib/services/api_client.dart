@@ -167,6 +167,10 @@ class ApiClient {
   Future<List<AppUser>> users() async =>
       [for (final u in await _get('/admin/users') as List) AppUser.fromJson(u as Map<String, dynamic>)];
 
+  /// FR-18: the admin creates an account with a first password.
+  Future<AppUser> createUser(String name, String email, String password, String role) async =>
+      AppUser.fromJson(await _post('/admin/users', {'name': name, 'email': email, 'password': password, 'role': role}));
+
   Future<AppUser> setDisabled(String userId, bool disabled) async =>
       AppUser.fromJson(await _post('/admin/users/$userId/${disabled ? 'disable' : 'enable'}'));
 

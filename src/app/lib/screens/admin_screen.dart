@@ -278,6 +278,11 @@ class _UsersTabState extends State<_UsersTab> {
     if (role != null && role != u.role) await _act(() => context.read<ApiClient>().changeRole(u.userId, role));
   }
 
+  Future<void> _create() async {
+    final created = await showDialog<bool>(context: context, builder: (_) => const CreateAccountForm());
+    if (created == true) _reload();
+  }
+
   Future<void> _remove(AppUser u) async {
     final ok = await showDialog<bool>(
       context: context,
@@ -304,6 +309,17 @@ class _UsersTabState extends State<_UsersTab> {
         if (snap.hasError) return MessageBox('${snap.error}');
         if (!snap.hasData) return const Center(child: CircularProgressIndicator());
         return ListView(children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(12, 12, 12, 4),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: FilledButton.icon(
+                icon: const Icon(Icons.person_add_alt),
+                label: const Text('Add account'),
+                onPressed: _create,
+              ),
+            ),
+          ),
           for (final u in snap.data!)
             ListTile(
               title: Text(u.name),
@@ -326,6 +342,108 @@ class _UsersTabState extends State<_UsersTab> {
             ),
         ]);
       },
+    );
+  }
+}
+
+// ------------------------------------------------------------ add account ----
+/// FR-18: the admin creates an account (name, email, first password, role).
+/// The new user signs in with this email and password.
+class CreateAccountForm extends StatefulWidget {
+  const CreateAccountForm({super.key});
+
+  @override
+  State<CreateAccountForm> createState() => _CreateAccountFormState();
+}
+
+class _CreateAccountFormState extends State<CreateAccountForm> {
+  final _form = GlobalKey<FormState>();
+  final _name = TextEditingController();
+  final _email = TextEditingController();
+  final _password = TextEditingController();
+  String _role = 'farmer';
+  String? _error;
+  bool _saving = false;
+
+  static final _emailPattern = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
+
+  @override
+  void dispose() {
+    _name.dispose();
+    _email.dispose();
+    _password.dispose();
+    super.dispose();
+  }
+
+  Future<void> _save() async {
+    if (!_form.currentState!.validate()) return;
+    setState(() {
+      _saving = true;
+      _error = null;
+    });
+    try {
+      await context.read<ApiClient>().createUser(_name.text.trim(), _email.text.trim(), _password.text, _role);
+      if (mounted) Navigator.of(context).pop(true);
+    } on ApiException catch (e) {
+      setState(() {
+        _error = e.message;
+        _saving = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Add account'),
+      content: SizedBox(
+        width: 420,
+        child: Form(
+          key: _form,
+          child: ListView(shrinkWrap: true, children: [
+            TextFormField(
+              key: const Key('newName'),
+              controller: _name,
+              decoration: const InputDecoration(labelText: 'Name'),
+              validator: (v) => (v == null || v.trim().isEmpty) ? 'Required' : null,
+            ),
+            TextFormField(
+              key: const Key('newEmail'),
+              controller: _email,
+              keyboardType: TextInputType.emailAddress,
+              decoration: const InputDecoration(labelText: 'Email'),
+              validator: (v) => _emailPattern.hasMatch(v?.trim() ?? '') ? null : 'Enter a valid email',
+            ),
+            TextFormField(
+              key: const Key('newPassword'),
+              controller: _password,
+              obscureText: true,
+              decoration: const InputDecoration(labelText: 'First password'),
+              validator: (v) => (v ?? '').length < 8 ? 'At least 8 characters' : null,
+            ),
+            DropdownButtonFormField<String>(
+              key: const Key('newRole'),
+              initialValue: _role,
+              decoration: const InputDecoration(labelText: 'Role'),
+              items: [for (final e in roleLabels.entries) DropdownMenuItem(value: e.key, child: Text(e.value))],
+              onChanged: (v) => setState(() => _role = v!),
+            ),
+            if (_error != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Text(_error!, style: TextStyle(color: Theme.of(context).colorScheme.error)),
+              ),
+          ]),
+        ),
+      ),
+      actions: [
+        TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Cancel')),
+        FilledButton(
+          style: FilledButton.styleFrom(minimumSize: const Size(88, 40)),
+          onPressed: _saving ? null : _save,
+          child: const Text('Create'),
+        ),
+      ],
     );
   }
 }
