@@ -20,10 +20,14 @@ htmlcov/
 # Backend local storage (memory mode uploads)
 .local_storage/
 
-# ML datasets and trained weights (too large for git)
+# ML datasets (too large for git). Only the released model files in
+# src/ml/models are tracked; retrained or experimental files stay local.
 src/ml/data/
 src/ml/models/*
 !src/ml/models/.gitkeep
+!src/ml/models/classifier.keras
+!src/ml/models/labels.json
+!src/ml/models/eval.json
 
 # Flutter / Dart
 .dart_tool/
