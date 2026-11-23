@@ -117,6 +117,14 @@ class DiseaseOut(BaseModel):
 
 
 # ---------------------------------------------------------------- weather ----
+class ForecastOut(BaseModel):
+    """Summary of the next hours of the forecast (FR-14)."""
+    hours: int
+    max_temperature: float
+    max_humidity: float
+    total_rainfall: float
+
+
 class WeatherOut(BaseModel):
     available: bool
     notice: str | None = None
@@ -125,6 +133,7 @@ class WeatherOut(BaseModel):
     humidity: float | None = None
     rainfall: float | None = None
     fetched_at: str | None = None
+    forecast: ForecastOut | None = None
 
 
 class SpreadRiskOut(BaseModel):
